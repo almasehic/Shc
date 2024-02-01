@@ -11,91 +11,103 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="532.0" prefWidth="843.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
       <VBox prefHeight="532.0" prefWidth="240.0">
          <children>
-            <AnchorPane fx:id="side_anchorpane" prefHeight="539.0" prefWidth="200.0" styleClass="side_anchorpane" stylesheets="@style.css">
+            <AnchorPane fx:id="side_anchorpane" prefHeight="687.0" prefWidth="276.0" styleClass="side_anchorpane" stylesheets="@style.css">
                <children>
-                  <Pane fx:id="inner_pane" layoutX="22.0" layoutY="14.0" prefHeight="70.0" prefWidth="197.0" styleClass="inner_pane" stylesheets="@style.css">
+                  <Pane fx:id="inner_pane" layoutX="18.0" layoutY="14.0" prefHeight="90.0" prefWidth="207.0" styleClass="inner_pane" stylesheets="@style.css">
                      <children>
-                        <ImageView fitHeight="60.0" fitWidth="128.0" layoutX="54.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="79.0" fitWidth="108.0" layoutX="50.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../../OneDrive/Radna%20površina/logoheight141.png" />
                            </image>
                         </ImageView>
                      </children>
                   </Pane>
-                  <Button fx:id="button_ulaz" layoutX="46.0" layoutY="192.0" mnemonicParsing="false" opacity="0.3" prefHeight="48.0" prefWidth="148.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@style.css" text="ULAZ" textFill="#303655">
+                  <Button fx:id="button_ulaz" disable="true" layoutX="28.0" layoutY="228.0" mnemonicParsing="false" opacity="0.3" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@style.css" text="ULAZ" textFill="#303655">
                      <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="button_izlaz" layoutX="46.0" layoutY="280.0" mnemonicParsing="false" opacity="0.3" prefHeight="48.0" prefWidth="148.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@style.css" text="IZLAZ" textFill="#303655">
-                     <font>
-                        <Font size="20.0" />
+                        <Font name="Verdana" size="22.0" />
                      </font>
                      <cursor>
-                        <Cursor fx:constant="DEFAULT" />
+                        <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="button_stanje" layoutX="46.0" layoutY="368.0" mnemonicParsing="false" opacity="0.3" prefHeight="48.0" prefWidth="148.0" styleClass="button_ulaz_izlaz_stanje" text="STANJE" textFill="#303655">
+                  <Button fx:id="button_izlaz" disable="true" layoutX="28.0" layoutY="348.0" mnemonicParsing="false" onAction="#siwtchToIzlazSelected" opacity="0.3" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@style.css" text="IZLAZ" textFill="#303655">
                      <font>
-                        <Font size="20.0" />
+                        <Font name="Verdana" size="22.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button fx:id="button_stanje" disable="true" layoutX="28.0" layoutY="467.0" mnemonicParsing="false" onAction="#siwtchToStanjeSelected" opacity="0.3" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" text="STANJE" textFill="#303655">
+                     <font>
+                        <Font name="Verdana" size="22.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Button>
                </children>
             </AnchorPane>
          </children>
       </VBox>
-      <Pane prefHeight="532.0" prefWidth="613.0">
+      <Pane prefHeight="680.0" prefWidth="918.0">
          <children>
-            <Pane fx:id="top_pane" prefHeight="90.0" prefWidth="608.0" styleClass="top_pane" stylesheets="@style.css">
+            <Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0" styleClass="top_pane" stylesheets="@style.css">
                <children>
-                  <Button fx:id="button_dodaj_proizvod" layoutX="251.0" layoutY="25.0" mnemonicParsing="false" opacity="0.3" prefHeight="40.0" prefWidth="181.0" styleClass="button_dodaj_proizvod" stylesheets="@style.css" text="Dodaj novi proizvod" textFill="#bfcbce">
+                  <Button fx:id="button_dodaj_proizvod" disable="true" layoutX="428.0" layoutY="27.0" mnemonicParsing="false" opacity="0.3" prefHeight="50.0" prefWidth="200.0" styleClass="button_dodaj_proizvod" stylesheets="@style.css" text="Dodaj novi proizvod" textFill="#bfcbce">
                      <font>
-                        <Font size="16.0" />
+                        <Font size="17.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
                   </Button>
-                  <Button fx:id="button_izmjena" layoutX="464.0" layoutY="25.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0" styleClass="button_izmjena" stylesheets="@style.css" text="Izmjena" textFill="#bfcbce">
+                  <Button fx:id="button_izmjena" layoutX="658.0" layoutY="27.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="button_izmjena" stylesheets="@style.css" text="Izmjena" textFill="#bfcbce">
                      <font>
-                        <Font size="16.0" />
+                        <Font size="17.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
                   </Button>
                </children>
             </Pane>
-            <Label layoutX="97.0" layoutY="189.0" prefHeight="25.0" prefWidth="414.0" text="Odaberite koji tip izmjene zelite izvrsiti:" textFill="#303655">
+            <Label layoutX="236.0" layoutY="194.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="532.0" text="Odaberite vrstu izmjene koju zelite izvrsiti:">
                <font>
-                  <Font name="Verdana" size="20.0" />
+                  <Font size="23.0" />
                </font>
             </Label>
-            <Button fx:id="button_izmjena_cijene" layoutX="31.0" layoutY="274.0" mnemonicParsing="false" onAction="#siwtchToIzmjenaCijeneSelected" prefHeight="113.0" prefWidth="166.0" styleClass="button_izmjena" stylesheets="@style.css" text="Izmjena cijene" textAlignment="CENTER" textFill="#bfcbce" wrapText="true">
+            <Button fx:id="button_nazad" layoutX="85.0" layoutY="586.0" mnemonicParsing="false" onAction="#siwtchBackToMain" prefHeight="41.0" prefWidth="151.0" styleClass="button_izmjena" stylesheets="@style.css" text="Nazad" textFill="#bfcbce">
                <font>
-                  <Font size="22.0" />
+                  <Font size="17.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="button_izmjena_naziva_modela" layoutX="221.0" layoutY="274.0" mnemonicParsing="false" onAction="#siwtchToIzmjenaNazivaModelaSelected" prefHeight="113.0" prefWidth="166.0" styleClass="button_izmjena" stylesheets="@style.css" text="Izmjena naziva modela" textAlignment="CENTER" textFill="#bfcbce" wrapText="true">
+            <Button fx:id="button_izmjena_modela" layoutX="356.0" layoutY="317.0" mnemonicParsing="false" onAction="#siwtchToIzmjenaNazivaModelaSelected" prefHeight="121.0" prefWidth="207.0" style="-fx-font-size: 20;" styleClass="button_izmjena" stylesheets="@style.css" text="Izmjena naziva modela" textAlignment="CENTER" textFill="#bfcbce" wrapText="true">
                <font>
-                  <Font size="22.0" />
+                  <Font size="25.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="button_izmjena_unosa" layoutX="407.0" layoutY="274.0" mnemonicParsing="false" onAction="#siwtchToIzmjenaUnosaSelected" prefHeight="113.0" prefWidth="166.0" styleClass="button_izmjena" stylesheets="@style.css" text="Izmjena unosa" textAlignment="CENTER" textFill="#bfcbce" wrapText="true">
+            <Button fx:id="button_izmjena_cijene" layoutX="85.0" layoutY="317.0" mnemonicParsing="false" onAction="#siwtchToIzmjenaCijeneSelected" prefHeight="121.0" prefWidth="207.0" style="-fx-font-size: 20;" styleClass="button_izmjena" stylesheets="@style.css" text="Izmjena cijene" textAlignment="CENTER" textFill="#bfcbce" wrapText="true">
                <font>
-                  <Font size="22.0" />
+                  <Font size="25.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="button_nazad" layoutX="31.0" layoutY="459.0" mnemonicParsing="false" onAction="#siwtchBackToMain" prefHeight="40.0" prefWidth="108.0" styleClass="button_izmjena" stylesheets="@style.css" text="Nazad" textFill="#bfcbce">
+            <Button fx:id="button_izmjena_unosa" layoutX="620.0" layoutY="317.0" mnemonicParsing="false" onAction="#siwtchToIzmjenaUnosaSelected" prefHeight="121.0" prefWidth="207.0" style="-fx-font-size: 20;" styleClass="button_izmjena" stylesheets="@style.css" text="Izmjena unosa" textAlignment="CENTER" textFill="#bfcbce" wrapText="true">
                <font>
-                  <Font size="16.0" />
+                  <Font size="25.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
