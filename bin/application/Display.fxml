@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.DisplayController">
    <children>
       <VBox prefHeight="680.0" prefWidth="165.0">
          <children>
@@ -28,6 +28,10 @@
                         </ImageView>
                      </children>
                   </Pane>
+                  <Button fx:id="button_nazad" layoutX="26.0" layoutY="615.0" mnemonicParsing="false" onAction="#siwtchBackToMain" prefHeight="35.0" prefWidth="118.0" styleClass="button_izmjena" text="Nazad" textFill="#bfcbce">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
                </children>
             </AnchorPane>
          </children>

@@ -1,6 +1,8 @@
 package application;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -101,38 +103,60 @@ public class Controller {
 	
 	//Taking data from Stanje_selected.fxml and sending it to Display.fxml
 	
-	
-	
-	
-	
+	public void checkDisplayInput(){
+		
+	}
 	
 	@FXML
 	TextField stanje_model, stanje_tip;
 	@FXML
 	DatePicker od_datuma, do_datuma;
-	
-	
-	//method to print the sent data on the top of the Display.fxml 
-	@FXML
-	Label Prikazivanje_text;
-	
-	public void display_arguments(String display) {
-		Prikazivanje_text.setText(display); 
-	}
-	
+
+
 	public void siwtchToDisplay(ActionEvent event) throws IOException {
 		
+		//no fields specified: show all items in store currently available
+		//only model specified: all typed of the model currently available
+		//only type specified: all models of type currently available
+		//only date: on that date all available
+		//date range: in that range all available... follow this logic for rest haha
 		
-		String display = stanje_model.getText()+" "+stanje_tip.getText()+" "+od_datuma.getValue().toString()+" "+do_datuma.getValue().toString();
-		Parent root = FXMLLoader.load(getClass().getResource("Display.fxml"));
-		System.out.println(display);
-		display_arguments(display);
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		String doDatuma;
 		
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+		if(stanje_model.getText().trim().isEmpty()) {
+			stanje_model.setText("Svi modeli");
+		}
+		if(stanje_tip.getText().trim().isEmpty()) {
+			stanje_tip.setText("svi tipovi");
+		}
+		if(od_datuma.getValue()==null) {
+			LocalDate currentDate = LocalDate.now();
+			od_datuma.setValue(currentDate);
+		}
+		if(do_datuma.getValue()==null) {
+			doDatuma = " ";
+		}else {
+			doDatuma = " - " +do_datuma.getValue().format(dateFormatter);
+		}
+		
+
+		String display = stanje_model.getText() + ", " + stanje_tip.getText() + ", " +
+		        od_datuma.getValue().format(dateFormatter) + doDatuma;
+
+	    System.out.println(display);
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("Display.fxml"));
+	    root = loader.load();
+
+	    DisplayController displayController = loader.getController();
+	    displayController.displayArguments(display);
+
+	    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    Scene scene = new Scene(root);
+	    stage.setScene(scene);
+	    stage.show();
 	}
+
 	
 	public void onOKButtonPress() {
 		
