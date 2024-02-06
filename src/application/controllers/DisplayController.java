@@ -25,7 +25,7 @@ public class DisplayController {
 	}
 
 	public void switchBackToMain(ActionEvent event) throws IOException {
-		Parent root = FXMLLoader.load(getClass().getResource("FXMLHomePage.fxml"));
+		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("resources/view/FXMLHomePage.fxml"));
 		stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);

@@ -23,7 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class UlazSelectedController {
+public class IzlazSelectedController {
 
 	@FXML
 	private TextField modelTextField;
@@ -42,40 +42,59 @@ public class UlazSelectedController {
 
 	@FXML
 	private void handleOkButton() {
-		String model = modelTextField.getText();
-		String tip = tipTextField.getText();
-		int kolicina = Integer.parseInt(kolicinaTextField.getText());
+	    String model = modelTextField.getText();
+	    String tip = tipTextField.getText();
+	    int kolicina = Integer.parseInt(kolicinaTextField.getText());
 
-		try (Connection connection = DatabaseUtil.getConnection()) {
-			String selectSql = "SELECT id FROM Product WHERE product_collection = ? AND product_type = ?";
-			try (PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
-				selectStatement.setString(1, model);
-				selectStatement.setString(2, tip.toUpperCase());
+	    try (Connection connection = DatabaseUtil.getConnection()) {
+	        String selectSql = "SELECT id FROM Product WHERE product_collection = ? AND product_type = ?";
+	        try (PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
+	            selectStatement.setString(1, model);
+	            selectStatement.setString(2, tip.toUpperCase());
 
-				try (ResultSet resultSet = selectStatement.executeQuery()) {
-					if (resultSet.next()) {
-						int product_id = resultSet.getInt("id");
+	            try (ResultSet resultSet = selectStatement.executeQuery()) {
+	                if (resultSet.next()) {
+	                    int product_id = resultSet.getInt("id");
 
-						String insertSql = "INSERT INTO Transaction (product_id, quantity, status) VALUES (?, ?, ?)";
-						try (PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
-							insertStatement.setInt(1, product_id);
-							insertStatement.setInt(2, kolicina);
-							insertStatement.setString(3, "ADDED");
-							insertStatement.executeUpdate();
-
-							showNotification("Success", "Data saved to the database!");
-						}
-					} else {
-						showNotification("Error", "Product not found in inventory!");
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	                    String checkSql = "SELECT SUM(CASE " +
+	                            "WHEN status = 'ADDED' THEN quantity " +
+	                            "WHEN status = 'SOLD' THEN -1 * quantity " +
+	                            "ELSE 0 " +
+	                            "END) AS current " +
+	                            "FROM Transaction " +
+	                            "WHERE product_id = ?";
+	                    try (PreparedStatement checkStatement = connection.prepareStatement(checkSql)) {
+	                        checkStatement.setInt(1, product_id);
+	                        try (ResultSet checkResultSet = checkStatement.executeQuery()) {
+	                            if (checkResultSet.next()) {
+	                                int currentQuantity = checkResultSet.getInt("current");
+	                                if (currentQuantity >= kolicina) {
+	                                    String insertSql = "INSERT INTO Transaction (product_id, quantity, status) VALUES (?, ?, ?)";
+	                                    try (PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
+	                                        insertStatement.setInt(1, product_id);
+	                                        insertStatement.setInt(2, kolicina);
+	                                        insertStatement.setString(3, "SOLD");
+	                                        insertStatement.executeUpdate();
+	                                        showNotification("Success", "Data saved to the database!");
+	                                    }
+	                                } else {
+	                                    showNotification("Error", "Not enough quantity available in inventory!");
+	                                }
+	                            } else {
+	                                showNotification("Error", "Failed to check current quantity!");
+	                            }
+	                        }
+	                    }
+	                } else {
+	                    showNotification("Error", "Product not found in inventory!");
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 
 	@FXML
 	private void switchToMainView() throws IOException {

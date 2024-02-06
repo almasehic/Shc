@@ -16,7 +16,7 @@
    <children>
       <VBox prefHeight="532.0" prefWidth="240.0">
          <children>
-            <AnchorPane fx:id="side_anchorpane" prefHeight="687.0" prefWidth="276.0" styleClass="side_anchorpane" stylesheets="/resources/css/style.css">
+            <AnchorPane fx:id="side_anchorpane" prefHeight="687.0" prefWidth="276.0" styleClass="side_anchorpane" stylesheets="@../css/style.css">
                <children>
                   <Pane fx:id="inner_pane" layoutX="18.0" layoutY="14.0" prefHeight="90.0" prefWidth="207.0" styleClass="inner_pane" stylesheets="/resources/css/style.css">
                      <children>
@@ -27,7 +27,7 @@
                         </ImageView>
                      </children>
                   </Pane>
-                  <Button fx:id="button_ulaz" layoutX="28.0" layoutY="228.0" mnemonicParsing="false" onAction="#switchToUlazSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="/resources/css/style.css" text="ULAZ" textFill="#303655">
+                  <Button fx:id="button_ulaz" layoutX="28.0" layoutY="228.0" mnemonicParsing="false" onAction="#switchToUlazSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@../css/style.css" text="ULAZ" textFill="#303655">
                      <font>
                         <Font name="Verdana" size="22.0" />
                      </font>
@@ -35,7 +35,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="button_izlaz" layoutX="28.0" layoutY="348.0" mnemonicParsing="false" onAction="#switchToIzlazSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="/resources/css/style.css" text="IZLAZ" textFill="#303655">
+                  <Button fx:id="button_izlaz" layoutX="28.0" layoutY="348.0" mnemonicParsing="false" onAction="#switchToIzlazSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@../css/style.css" text="IZLAZ" textFill="#303655">
                      <font>
                         <Font name="Verdana" size="22.0" />
                      </font>
@@ -43,7 +43,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="button_stanje" layoutX="28.0" layoutY="467.0" mnemonicParsing="false" onAction="#switchToStanjeSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" text="STANJE" textFill="#303655">
+                  <Button fx:id="button_stanje" layoutX="28.0" layoutY="467.0" mnemonicParsing="false" onAction="#switchToStanjeSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@../css/style.css" text="STANJE" textFill="#303655">
                      <font>
                         <Font name="Verdana" size="22.0" />
                      </font>
@@ -55,19 +55,11 @@
             </AnchorPane>
          </children>
       </VBox>
-      <Pane prefHeight="680.0" prefWidth="918.0">
+      <Pane prefHeight="680.0" prefWidth="918.0" style="-fx-background-color: BFCBCE;" stylesheets="@../css/style.css">
          <children>
-            <Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0" styleClass="top_pane" stylesheets="/resources/css/style.css">
+            <Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0" styleClass="top_pane" stylesheets="@../css/style.css">
                <children>
-                  <Button fx:id="button_dodaj_proizvod" layoutX="428.0" layoutY="27.0" mnemonicParsing="false" onAction="#switchToDodajNoviProizvodSelected" prefHeight="50.0" prefWidth="200.0" styleClass="button_dodaj_proizvod" stylesheets="/resources/css/style.css" text="Dodaj novi proizvod" textFill="#bfcbce">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="button_izmjena" layoutX="658.0" layoutY="27.0" mnemonicParsing="false" onAction="#switchToIzmjenaSelected" prefHeight="50.0" prefWidth="200.0" styleClass="button_izmjena" stylesheets="/resources/css/style.css" text="Izmjena" textFill="#bfcbce">
+                  <Button fx:id="button_proizvodi" layoutX="666.0" layoutY="27.0" mnemonicParsing="false" onAction="#switchToProizvodi" prefHeight="50.0" prefWidth="200.0" styleClass="button_dodaj_proizvod" stylesheets="@../css/style.css" text="Proizvodi" textFill="#bfcbce">
                      <font>
                         <Font size="17.0" />
                      </font>

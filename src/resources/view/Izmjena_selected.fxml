@@ -58,20 +58,12 @@
          <children>
             <Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0" styleClass="top_pane" stylesheets="/resources/css/style.css">
                <children>
-                  <Button fx:id="button_dodaj_proizvod" disable="true" layoutX="428.0" layoutY="27.0" mnemonicParsing="false" opacity="0.3" prefHeight="50.0" prefWidth="200.0" styleClass="button_dodaj_proizvod" stylesheets="/resources/css/style.css" text="Dodaj novi proizvod" textFill="#bfcbce">
+                  <Button fx:id="button_proizvodi" layoutX="666.0" layoutY="27.0" mnemonicParsing="false" onAction="#switchToProizvodi" prefHeight="50.0" prefWidth="200.0" styleClass="button_dodaj_proizvod" stylesheets="@../css/style.css" text="Proizvodi" textFill="#bfcbce">
                      <font>
                         <Font size="17.0" />
                      </font>
                      <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="button_izmjena" layoutX="658.0" layoutY="27.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="button_izmjena" stylesheets="/resources/css/style.css" text="Izmjena" textFill="#bfcbce">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="DEFAULT" />
+                        <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
                </children>

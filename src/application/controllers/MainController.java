@@ -61,4 +61,7 @@ public class MainController {
 	public void switchToDisplay(ActionEvent event) throws IOException {
 		switchToView("/resources/view/Display.fxml", event);
 	}
+	public void switchToProizvodi(ActionEvent event) throws IOException {
+		switchToView("/resources/view/Display.fxml", event);
+	}
 }
