@@ -15,7 +15,6 @@ public class DisplayController {
 
 	private Stage stage;
 	private Scene scene;
-	private Parent root;
 
 	@FXML
 	Label Prikazivanje_text;

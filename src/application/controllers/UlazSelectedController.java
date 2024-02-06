@@ -7,21 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import application.service.DatabaseUtil;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import application.service.NotificationHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class UlazSelectedController {
 
@@ -44,7 +38,27 @@ public class UlazSelectedController {
 	private void handleOkButton() {
 		String model = modelTextField.getText();
 		String tip = tipTextField.getText();
-		int kolicina = Integer.parseInt(kolicinaTextField.getText());
+		String kolicinaText = kolicinaTextField.getText();
+
+		if (model.isEmpty() || tip.isEmpty() || kolicinaText.isEmpty()) {
+			NotificationHandler.showNotification(notificationPane, "Error", "Please fill in all fields.");
+			return;
+		}
+
+		int kolicina;
+		try {
+			kolicina = Integer.parseInt(kolicinaText);
+		} catch (NumberFormatException e) {
+			NotificationHandler.showNotification(notificationPane, "Error",
+					"Invalid quantity input. Please enter a valid number.");
+			return;
+		}
+
+		if (kolicina <= 0) {
+			NotificationHandler.showNotification(notificationPane, "Error",
+					"Quantity cannot be zero or less. Please enter a valid quantity.");
+			return;
+		}
 
 		try (Connection connection = DatabaseUtil.getConnection()) {
 			String selectSql = "SELECT id FROM Product WHERE product_collection = ? AND product_type = ?";
@@ -63,17 +77,33 @@ public class UlazSelectedController {
 							insertStatement.setString(3, "ADDED");
 							insertStatement.executeUpdate();
 
-							showNotification("Success", "Data saved to the database!");
+						} catch (SQLException e) {
+							e.printStackTrace();
+							NotificationHandler.showNotification(notificationPane, "Error",
+									"Failed to create transaction: " + e.getMessage());
 						}
 					} else {
-						showNotification("Error", "Product not found in inventory!");
+						NotificationHandler.showNotification(notificationPane, "Error",
+								"Product not found in inventory!");
 					}
-				} catch (Exception e) {
+				} catch (SQLException e) {
 					e.printStackTrace();
+					NotificationHandler.showNotification(notificationPane, "Error",
+							"Database error while checking product: " + e.getMessage());
 				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				NotificationHandler.showNotification(notificationPane, "Error",
+						"Database error while querying product: " + e.getMessage());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			NotificationHandler.showNotification(notificationPane, "Error",
+					"Database connection error: " + e.getMessage());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			NotificationHandler.showNotification(notificationPane, "Error",
+					"Invalid quantity input. Please enter a valid number.");
 		}
 	}
 
@@ -84,63 +114,4 @@ public class UlazSelectedController {
 		stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/resources/view/FXMLHomePage.fxml"))));
 		stage.show();
 	}
-	
-
-
-	private void showNotification(String status, String message) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/components/Notification.fxml"));
-			Parent notification = loader.load();
-
-			NotificationController notificationController = loader.getController();
-			notificationController.setNotification(status, message);
-
-			double spaceBetweenNotifications = 5;
-
-			// Calculate the total height of all notifications, including spacing
-			double totalHeight = notificationPane.getChildren().stream()
-					.mapToDouble(node -> node.getBoundsInParent().getHeight()).sum()
-					+ (notificationPane.getChildren().size() * spaceBetweenNotifications);
-
-			notification.setTranslateY(totalHeight);
-
-			notificationPane.getChildren().add(notification);
-
-			notificationPane.toFront();
-
-			Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					closeNotification(notification);
-				}
-			}));
-			timeline.play();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void closeNotification(Node notification) {
-		StackPane parentPane = (StackPane) notification.getParent();
-		if (parentPane != null) {
-			int index = parentPane.getChildren().indexOf(notification);
-
-			parentPane.getChildren().remove(notification);
-
-			for (int i = index; i < parentPane.getChildren().size(); i++) {
-				Node currentNotification = parentPane.getChildren().get(i);
-				double currentTranslateY = currentNotification.getTranslateY();
-
-				double closingNotificationHeight = notification.getBoundsInParent().getHeight() + 5;
-				animateTranslation(currentNotification, currentTranslateY - closingNotificationHeight);
-			}
-		}
-	}
-
-	private void animateTranslation(Node node, double targetY) {
-		TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), node);
-		transition.setToY(targetY);
-		transition.play();
-	}
-
 }

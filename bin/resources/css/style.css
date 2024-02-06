@@ -1,0 +1,79 @@
+.root{
+	-fx-background-color: #BFCBCE;
+}
+
+.side_anchorpane{
+	-fx-background-color: #84A7BA;
+	-fx-border-color: #303655;
+	-fx-border-width: 1px 1px 1px 1px;
+	/*-fx-border-radius: 50px;*/
+	-fx-border-style: solid;
+	
+}
+
+.inner_pane{
+	-fx-background-color: #ffffff;
+	-fx-border-color: #303655;
+	-fx-border-width: 1px 1px 1px 1px;
+}
+
+.button_ulaz_izlaz_stanje{
+	-fx-background-color: #6F90AF;
+	-fx-border-width: 1px 1px 1px 1px;
+	-fx-border-radius: 20px;
+	-fx-background-radius: 20px;
+	-fx-border-style: solid;
+	-fx-border-color: #BFCBCE;
+	-fx-font-size: 22;
+	-fx-font-family: "Verdana";
+}
+
+.top_pane{
+	-fx-background-color: #84A7BA;
+	-fx-border-color: #303655;
+	-fx-border-width: 1px 1px 1px 0px;
+	/*-fx-border-radius: 50px;*/
+	-fx-border-style: solid;
+}
+
+.button_dodaj_proizvod{
+	-fx-background-color: #6F90AF;
+	-fx-border-width: 1px 1px 1px 1px;
+	-fx-border-radius: 20px;
+	-fx-background-radius: 20px;
+	-fx-border-style: solid;
+	-fx-border-color: #BFCBCE;
+	-fx-font-size: 17;
+	-fx-font-family: "Verdana";
+}
+
+.button_izmjena{
+	-fx-background-color: #6F90AF;
+	-fx-border-width: 1px 1px 1px 1px;
+	-fx-border-radius: 20px;
+	-fx-background-radius: 20px;
+	-fx-border-style: solid;
+	-fx-border-color: #BFCBCE;
+	-fx-font-size: 17;
+	-fx-font-family: "Verdana";
+}
+
+.button_selected{
+	-fx-background-color: #BFCBCE;
+	-fx-border-width: 1px 1px 1px 1px;
+	-fx-border-radius: 20px;
+	-fx-background-radius: 20px;
+	-fx-border-style: solid;
+	-fx-border-color: #6F90AF;
+	-fx-font-size: 22;
+	-fx-font-family: "Verdana";
+}
+
+.label_selected_action{
+	-fx-background-color: #BFCBCE;
+	-fx-text-decoration: underline;
+	-fx-background-radius: 20px;
+	
+}
+
+
