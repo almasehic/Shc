@@ -70,6 +70,7 @@
                   </Button>
                </children>
             </Pane>
+            <StackPane fx:id="popUpPane" layoutX="-239.0" prefHeight="680.0" prefWidth="1157.0" />                     
             <StackPane fx:id="notificationPane" layoutX="649.0" layoutY="115.0" prefHeight="78.0" prefWidth="255.0" />
             <Label layoutX="185.0" layoutY="183.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Model:">
                <font>

@@ -6,8 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import application.componentHandler.NotificationHandler;
+import application.componentHandler.PopUpHandler;
 import application.service.DatabaseUtil;
-import application.service.NotificationHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -33,6 +34,9 @@ public class UlazSelectedController {
 
 	@FXML
 	private StackPane notificationPane;
+
+	@FXML
+	private StackPane popUpPane;
 
 	@FXML
 	private void handleOkButton() {
@@ -61,7 +65,7 @@ public class UlazSelectedController {
 		}
 
 		try (Connection connection = DatabaseUtil.getConnection()) {
-			String selectSql = "SELECT id FROM Product WHERE product_collection = ? AND product_type = ?";
+			String selectSql = "SELECT id, silver, gold, price FROM Product WHERE product_collection = ? AND product_type = ?";
 			try (PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
 				selectStatement.setString(1, model);
 				selectStatement.setString(2, tip.toUpperCase());
@@ -69,34 +73,41 @@ public class UlazSelectedController {
 				try (ResultSet resultSet = selectStatement.executeQuery()) {
 					if (resultSet.next()) {
 						int product_id = resultSet.getInt("id");
+						double silver = resultSet.getDouble("silver");
+						double gold = resultSet.getDouble("gold");
+						double price = resultSet.getDouble("price");
 
-						String insertSql = "INSERT INTO Transaction (product_id, quantity, status) VALUES (?, ?, ?)";
-						try (PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
-							insertStatement.setInt(1, product_id);
-							insertStatement.setInt(2, kolicina);
-							insertStatement.setString(3, "ADDED");
-							insertStatement.executeUpdate();
-
-						} catch (SQLException e) {
-							e.printStackTrace();
-							NotificationHandler.showNotification(notificationPane, "Error",
-									"Failed to create transaction: " + e.getMessage());
-						}
+						PopUpHandler.showPopup(popUpPane, "Da li je ovo novi proizvog koji zelite dodati:",
+								model + "     " + tip + "     " + gold + "     " + silver + "     " + price,
+								(isConfirmed) -> {
+									if (isConfirmed) {
+										try (Connection connectionInner = DatabaseUtil.getConnection()) {
+											String insertSql = "INSERT INTO Transaction (product_id, quantity, status) VALUES (?, ?, ?)";
+											try (PreparedStatement insertStatement = connectionInner
+													.prepareStatement(insertSql)) {
+												insertStatement.setInt(1, product_id);
+												insertStatement.setInt(2, kolicina);
+												insertStatement.setString(3, "ADDED");
+												insertStatement.executeUpdate();
+											}
+											NotificationHandler.showNotification(notificationPane, "Success",
+													"Data saved to the database!");
+										} catch (SQLException e) {
+											e.printStackTrace();
+											NotificationHandler.showNotification(notificationPane, "Error",
+													"Failed to create transaction: " + e.getMessage());
+										}
+									}
+								});
 					} else {
 						NotificationHandler.showNotification(notificationPane, "Error",
 								"Product not found in inventory!");
 					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					NotificationHandler.showNotification(notificationPane, "Error",
-							"Database error while checking product: " + e.getMessage());
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				NotificationHandler.showNotification(notificationPane, "Error",
-						"Database error while querying product: " + e.getMessage());
 			}
-		} catch (SQLException e) {
+		} catch (
+
+		SQLException e) {
 			e.printStackTrace();
 			NotificationHandler.showNotification(notificationPane, "Error",
 					"Database connection error: " + e.getMessage());

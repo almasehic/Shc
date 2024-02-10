@@ -6,8 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import application.componentHandler.NotificationHandler;
+import application.componentHandler.PopUpHandler;
 import application.service.DatabaseUtil;
-import application.service.NotificationHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -33,6 +34,9 @@ public class IzlazSelectedController {
 
 	@FXML
 	private StackPane notificationPane;
+
+	@FXML
+	private StackPane popUpPane;
 
 	@FXML
 	private void handleOkButton() {
@@ -80,21 +84,30 @@ public class IzlazSelectedController {
 								if (checkResultSet.next()) {
 									int currentQuantity = checkResultSet.getInt("current");
 									if (currentQuantity >= kolicina) {
-										String insertSql = "INSERT INTO Transaction (product_id, quantity, status) VALUES (?, ?, ?)";
-										try (PreparedStatement insertStatement = connection
-												.prepareStatement(insertSql)) {
-											insertStatement.setInt(1, product_id);
-											insertStatement.setInt(2, kolicina);
-											insertStatement.setString(3, "SOLD");
-											insertStatement.executeUpdate();
+										PopUpHandler.showPopup(popUpPane, "Potvrdi prodaju",
+												"Da li ste sigurni da zelite prodati proizvod?", (isConfirmed) -> {
+													if (isConfirmed) {
+														try {
+															Connection insertConnection = DatabaseUtil.getConnection();
+															String insertSql = "INSERT INTO Transaction (product_id, quantity, status) VALUES (?, ?, ?)";
+															try (PreparedStatement insertStatement = insertConnection
+																	.prepareStatement(insertSql)) {
+																insertStatement.setInt(1, product_id);
+																insertStatement.setInt(2, kolicina);
+																insertStatement.setString(3, "SOLD");
+																insertStatement.executeUpdate();
 
-											NotificationHandler.showNotification(notificationPane, "Success",
-													"Data saved to the database!");
-										} catch (SQLException e) {
-											e.printStackTrace();
-											NotificationHandler.showNotification(notificationPane, "Error",
-													"Failed to create transaction: " + e.getMessage());
-										}
+																NotificationHandler.showNotification(notificationPane,
+																		"Success", "Data saved to the database!");
+															}
+														} catch (SQLException e) {
+															e.printStackTrace();
+															NotificationHandler.showNotification(notificationPane,
+																	"Error",
+																	"Failed to create transaction: " + e.getMessage());
+														}
+													}
+												});
 									} else {
 										NotificationHandler.showNotification(notificationPane, "Error",
 												"Not enough quantity available in inventory!");

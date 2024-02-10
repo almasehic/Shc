@@ -49,7 +49,7 @@
 				<Insets />
 			</VBox.margin>
 		</HBox>
-		<Label fx:id="bodyLabel" alignment="TOP_LEFT" prefHeight="36.0" prefWidth="229.0" text="Notification Body">
+		<Label fx:id="bodyLabel" alignment="TOP_LEFT" prefHeight="36.0" prefWidth="229.0" style="-fx-wrap-text: true;" text="Notification Body">
          <font>
             <Font size="11.0" />
          </font></Label>

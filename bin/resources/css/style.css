@@ -76,4 +76,15 @@
 	
 }
 
+.popup_confirmation_buttons {
+	-fx-background-color: #BFCBCE;
+	-fx-border-width: 2px;
+	-fx-border-radius: 20px;
+	-fx-background-radius: 20px;
+	-fx-border-style: solid;
+	-fx-border-color: #6F90AF;
+	-fx-font-size: 22px;
+	-fx-font-family: "Verdana";
+}
+
 

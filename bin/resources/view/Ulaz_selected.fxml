@@ -58,6 +58,7 @@
       </VBox>
       <Pane prefHeight="680.0" prefWidth="918.0">
          <children>
+            <StackPane fx:id="popUpPane" layoutX="-239.0" prefHeight="680.0" prefWidth="1157.0" />         
             <StackPane fx:id="notificationPane" layoutX="649.0" layoutY="115.0" prefHeight="78.0" prefWidth="255.0" />
             <Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0" styleClass="top_pane" stylesheets="@../css/style.css">
                <children>
