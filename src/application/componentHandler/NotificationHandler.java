@@ -63,6 +63,10 @@ public class NotificationHandler {
 				double closingNotificationHeight = notification.getBoundsInParent().getHeight() + 5;
 				animateTranslation(currentNotification, currentTranslateY - closingNotificationHeight);
 			}
+
+			if (notificationPane.getChildren().isEmpty()) {
+				notificationPane.toBack();
+			}
 		}
 	}
 
