@@ -40,7 +40,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class DisplayController implements Initializable {
+public class DisplayProductsDeletedController implements Initializable {
 
 	@FXML
 	private TableView<Product> prikazivanje_table;
@@ -117,22 +117,15 @@ public class DisplayController implements Initializable {
 		int totalItems = prikazivanje_table.getItems().size();
 		totalItemsLabel.setText("Total items: " + totalItems);
 
-		Image deleteIcon = new Image(getClass().getResourceAsStream("/resources/images/trash.png"));
-		Image updateIcon = new Image(getClass().getResourceAsStream("/resources/images/pen_to_square.png"));
+		Image undoIcon = new Image(getClass().getResourceAsStream("/resources/images/rotate_left.png"));
 
 		actionsColumn.setCellFactory(param -> new TableCell<>() {
-			private final Button deleteButton = createIconButton(deleteIcon);
-			private final Button updateButton = createIconButton(updateIcon);
+			private final Button undoButton = createIconButton(undoIcon);
 
 			{
-				deleteButton.setOnAction(event -> {
+				undoButton.setOnAction(event -> {
 					Product product = getTableView().getItems().get(getIndex());
-					showDeleteConfirmation(product);
-				});
-
-				updateButton.setOnAction(event -> {
-					Product product = getTableView().getItems().get(getIndex());
-					updateProduct(product);
+					showUndoDeleteProductConfirmation(product);
 				});
 			}
 
@@ -142,8 +135,7 @@ public class DisplayController implements Initializable {
 				if (empty) {
 					setGraphic(null);
 				} else {
-					HBox buttonsBox = new HBox(updateButton, deleteButton);
-					buttonsBox.setSpacing(20);
+					HBox buttonsBox = new HBox(undoButton);
 					buttonsBox.setAlignment(Pos.CENTER);
 					setGraphic(buttonsBox);
 				}
@@ -198,17 +190,17 @@ public class DisplayController implements Initializable {
 		return button;
 	}
 
-	private void showDeleteConfirmation(Product product) {
-		PopUpHandler.showPopup(popUpPane, "Confirm Deletion", "Are you sure you want to delete this product?",
+	private void showUndoDeleteProductConfirmation(Product product) {
+		PopUpHandler.showPopup(popUpPane, "Confirm Undo Deletion", "Confirm undo of product deletion?",
 				confirmation -> {
 					if (confirmation) {
-						deleteProduct(product);
+						undoDeleteProduct(product);
 					}
 				});
 	}
 
-	private void deleteProduct(Product product) {
-		String updateSql = "UPDATE product SET is_deleted = TRUE WHERE id = ?";
+	private void undoDeleteProduct(Product product) {
+		String updateSql = "UPDATE product SET is_deleted = FALSE WHERE id = ?";
 
 		try (Connection connection = DatabaseUtil.getConnection();
 				PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
@@ -217,7 +209,7 @@ public class DisplayController implements Initializable {
 
 			if (rowsAffected > 0) {
 				NotificationHandler.showNotification(notificationPane, "Success",
-						"Product marked as deleted successfully.");
+						"Product marked as not deleted successfully.");
 				product.setDeleted(true);
 
 				loadProducts();
@@ -226,11 +218,12 @@ public class DisplayController implements Initializable {
 
 				prikazivanje_table.setItems(filteredData);
 			} else {
-				NotificationHandler.showNotification(notificationPane, "Error", "Failed to mark product as deleted.");
+				NotificationHandler.showNotification(notificationPane, "Error",
+						"Failed to mark product as not deleted.");
 			}
 		} catch (SQLException e) {
 			NotificationHandler.showNotification(notificationPane, "Error",
-					"An error occurred while marking the product as deleted.");
+					"An error occurred while marking the product as not deleted.");
 			e.printStackTrace();
 		}
 	}
@@ -242,7 +235,7 @@ public class DisplayController implements Initializable {
 	private void loadProducts() {
 		ObservableList<Product> products = FXCollections.observableArrayList();
 
-		String selectSql = "SELECT * FROM product WHERE is_deleted = FALSE";
+		String selectSql = "SELECT * FROM product WHERE is_deleted = TRUE";
 		try (Connection connection = DatabaseUtil.getConnection();
 				PreparedStatement selectStatement = connection.prepareStatement(selectSql);
 				ResultSet resultSet = selectStatement.executeQuery()) {
@@ -285,10 +278,10 @@ public class DisplayController implements Initializable {
 	}
 
 	@FXML
-	private void switchToMainView() throws IOException {
+	private void switchBackToDisplayProducts() throws IOException {
 		Node source = (Node) top_pane;
 		Stage stage = (Stage) source.getScene().getWindow();
-		stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/resources/view/FXMLHomePage.fxml"))));
+		stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/resources/view/DisplayProducts.fxml"))));
 		stage.show();
 	}
 }

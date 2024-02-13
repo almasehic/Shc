@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.DisplayController">
+<Pane fx:id="root" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.DisplayProductsController">
 	<children>
 		<StackPane fx:id="notificationPane" layoutX="895.0" layoutY="115.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0" prefWidth="255.0" />
 		<StackPane fx:id="popUpPane" prefHeight="680.0" prefWidth="1157.0" />
@@ -62,7 +62,7 @@
 										<Font size="18.0" />
 									</font>
 								</Label>
-								<Button fx:id="button_delete" layoutX="679.0" layoutY="25.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="133.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Deleted" textFill="#bfcbce">
+								<Button onAction="#switchToDisplayProductDeleted" fx:id="button_delete" layoutX="679.0" layoutY="25.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="133.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Deleted" textFill="#bfcbce">
 									<font>
 										<Font size="17.0" />
 									</font>

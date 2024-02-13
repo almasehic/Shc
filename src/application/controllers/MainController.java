@@ -58,10 +58,7 @@ public class MainController {
 		switchToView("/resources/view/FXMLHomePage.fxml", event);
 	}
 
-	public void switchToDisplay(ActionEvent event) throws IOException {
-		switchToView("/resources/view/Display.fxml", event);
-	}
 	public void switchToProizvodi(ActionEvent event) throws IOException {
-		switchToView("/resources/view/Display.fxml", event);
+		switchToView("/resources/view/DisplayProducts.fxml", event);
 	}
 }
