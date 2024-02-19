@@ -18,10 +18,10 @@ public class StanjeSelectedController {
 	TextField stanje_model, stanje_tip;
 	@FXML
 	DatePicker od_datuma, do_datuma;
-	
+
 	private Stage stage;
 	private Scene scene;
-	
+
 	private void switchToView(String viewPath, ActionEvent event) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource(viewPath));
 		stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -33,4 +33,9 @@ public class StanjeSelectedController {
 	public void switchBackToMain(ActionEvent event) throws IOException {
 		switchToView("/resources/view/FXMLHomePage.fxml", event);
 	}
+
+	public void switchToTransakcije(ActionEvent event) throws IOException {
+		switchToView("/resources/view/Transakcije.fxml", event);
+	}
+
 }

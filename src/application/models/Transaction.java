@@ -1,10 +1,18 @@
 package application.models;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import application.service.DatabaseUtil;
 
 public class Transaction {
 	private int id;
 	private int productId;
+	private String productType;
+	private String productCollection;
 	private int quantity;
 	private String status;
 	private Timestamp createdAt;
@@ -16,6 +24,33 @@ public class Transaction {
 		this.quantity = quantity;
 		this.status = status;
 		this.createdAt = createdAt;
+
+		retrieveProductDetailsFromDatabase(productId);
+	}
+
+	private void retrieveProductDetailsFromDatabase(int productId) {
+		String selectSql = "SELECT product_type, product_collection FROM product WHERE id = ?";
+
+		try (Connection connection = DatabaseUtil.getConnection();
+				PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
+			selectStatement.setInt(1, productId);
+			try (ResultSet resultSet = selectStatement.executeQuery()) {
+				if (resultSet.next()) {
+					this.productCollection = resultSet.getString("product_collection");
+					this.productType = resultSet.getString("product_type");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String getProductType() {
+		return productType;
+	}
+
+	public String getProductCollection() {
+		return productCollection;
 	}
 
 	public int getId() {

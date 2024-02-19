@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainController">
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.StanjeSelectedController">
    <children>
       <VBox prefHeight="532.0" prefWidth="240.0">
          <children>
@@ -37,7 +37,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="button_izlaz" disable="true" layoutX="28.0" layoutY="348.0" mnemonicParsing="false" onAction="#switchToIzlazSelected" opacity="0.3" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@../css/style.css" text="IZLAZ" textFill="#303655">
+                  <Button fx:id="button_izlaz" disable="true" layoutX="28.0" layoutY="348.0" mnemonicParsing="false"  opacity="0.3" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@../css/style.css" text="IZLAZ" textFill="#303655">
                      <font>
                         <Font name="Verdana" size="22.0" />
                      </font>
@@ -45,7 +45,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="button_stanje" layoutX="28.0" layoutY="467.0" mnemonicParsing="false" onAction="#switchToStanjeSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_selected" stylesheets="@../css/style.css" text="STANJE" textFill="#303655">
+                  <Button fx:id="button_stanje" layoutX="28.0" layoutY="467.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="187.0" styleClass="button_selected" stylesheets="@../css/style.css" text="STANJE" textFill="#303655">
                      <font>
                         <Font name="Verdana" size="22.0" />
                      </font>
@@ -119,7 +119,7 @@
             </Label>
             <DatePicker fx:id="od_datuma" layoutX="134.0" layoutY="394.0" prefHeight="50.0" prefWidth="336.0" />
             <DatePicker fx:id="do_datuma" layoutX="134.0" layoutY="503.0" prefHeight="50.0" prefWidth="336.0" />
-            <Button fx:id="button_transakcije" layoutX="737.0" layoutY="586.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="151.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Transakcije" textFill="#bfcbce">
+            <Button fx:id="button_transakcije" onAction="#switchToTransakcije" layoutX="737.0" layoutY="586.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="151.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Transakcije" textFill="#bfcbce">
                <font>
                   <Font size="17.0" />
                </font>
