@@ -9,14 +9,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.Controller">
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.DodajProizvodController">
    <children>
       <VBox prefHeight="532.0" prefWidth="240.0">
          <children>
-            <AnchorPane fx:id="side_anchorpane" prefHeight="687.0" prefWidth="276.0" styleClass="side_anchorpane" stylesheets="/resources/css/style.css">
+            <AnchorPane fx:id="side_anchorpane" prefHeight="687.0" prefWidth="193.0" styleClass="side_anchorpane" stylesheets="@../css/style.css">
                <children>
                   <Pane fx:id="inner_pane" layoutX="18.0" layoutY="14.0" prefHeight="90.0" prefWidth="207.0" styleClass="inner_pane" stylesheets="/resources/css/style.css">
                      <children>
@@ -27,87 +28,74 @@
                         </ImageView>
                      </children>
                   </Pane>
-                  <Button fx:id="button_ulaz" disable="true" layoutX="28.0" layoutY="228.0" mnemonicParsing="false" opacity="0.3" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="/resources/css/style.css" text="ULAZ" textFill="#303655">
-                     <font>
-                        <Font name="Verdana" size="22.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="button_izlaz" disable="true" layoutX="28.0" layoutY="348.0" mnemonicParsing="false" onAction="#switchToIzlazSelected" opacity="0.3" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="/resources/css/style.css" text="IZLAZ" textFill="#303655">
-                     <font>
-                        <Font name="Verdana" size="22.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="button_stanje" disable="true" layoutX="28.0" layoutY="467.0" mnemonicParsing="false" onAction="#switchToStanjeSelected" opacity="0.3" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" text="STANJE" textFill="#303655">
-                     <font>
-                        <Font name="Verdana" size="22.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
                </children>
             </AnchorPane>
          </children>
       </VBox>
-      <Pane prefHeight="680.0" prefWidth="918.0">
+      <Pane prefHeight="680.0" prefWidth="918.0" style="-fx-background-color: BFCBCE;" stylesheets="@../css/style.css">
          <children>
-            <Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0" styleClass="top_pane" stylesheets="/resources/css/style.css">
+         	<StackPane fx:id="popUpPane" layoutX="-239.0" prefHeight="680.0" prefWidth="1157.0" />          
+            <StackPane fx:id="notificationPane" layoutX="649.0" layoutY="115.0" prefHeight="78.0" prefWidth="255.0" />
+            <Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0" styleClass="top_pane" stylesheets="@../css/style.css">
                <children>
-                  <Button fx:id="button_dodaj_proizvod" layoutX="428.0" layoutY="27.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="button_dodaj_proizvod" stylesheets="/resources/css/style.css" text="Dodaj novi proizvod" textFill="#bfcbce">
+                  <Label layoutX="39.0" layoutY="24.0" prefHeight="56.0" prefWidth="292.0" style="-fx-background-color: #6F90AF; -fx-background-radius: 5; -fx-text-alignment: center;" text="      Dodaj novi proizvod:       " textFill="#303655" underline="true">
                      <font>
-                        <Font size="17.0" />
+                        <Font size="23.0" />
                      </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="button_izmjena" disable="true" layoutX="658.0" layoutY="27.0" mnemonicParsing="false" opacity="0.3" prefHeight="50.0" prefWidth="200.0" styleClass="button_izmjena" stylesheets="/resources/css/style.css" text="Izmjena" textFill="#bfcbce">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
+                  </Label>
                </children>
             </Pane>
-            <Label layoutX="162.0" layoutY="145.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Naziv novog modela:">
+            <Label layoutX="185.0" layoutY="183.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Naziv novog modela:">
                <font>
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField layoutX="137.0" layoutY="189.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Upiši model: ">
+            <TextField fx:id="textModel" layoutX="160.0" layoutY="227.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Upiši model: ">
                <font>
                   <Font size="23.0" />
                </font>
             </TextField>
-            <Label layoutX="162.0" layoutY="247.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Tip modela:">
+            <Label layoutX="185.0" layoutY="285.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Tip:">
                <font>
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField layoutX="137.0" layoutY="291.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Odaberi tip:">
+            <TextField fx:id="textTip" layoutX="160.0" layoutY="329.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Odaberi tip:">
                <font>
                   <Font size="23.0" />
                </font>
             </TextField>
-            <Label layoutX="162.0" layoutY="350.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Au grami:">
+            <Label layoutX="185.0" layoutY="388.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Au grami:">
                <font>
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField layoutX="137.0" layoutY="394.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="0">
+            <TextField fx:id="textAu" layoutX="160.0" layoutY="432.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
                <font>
                   <Font size="23.0" />
                </font>
             </TextField>
-            <Button fx:id="button_nazad" layoutX="85.0" layoutY="586.0" mnemonicParsing="false" onAction="#switchBackToMain" prefHeight="41.0" prefWidth="151.0" styleClass="button_izmjena" stylesheets="/resources/css/style.css" text="Nazad" textFill="#bfcbce">
+            <Label layoutX="449.0" layoutY="391.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Ag grami:">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+            <TextField fx:id="textAg" layoutX="424.0" layoutY="435.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </TextField>
+            <Label layoutX="185.0" layoutY="497.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Cijena:">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+            <TextField fx:id="textPrice" layoutX="160.0" layoutY="541.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </TextField>
+            <Button fx:id="button_dodaj" layoutX="705.0" layoutY="591.0" mnemonicParsing="false" onAction="#addNewProduct" prefHeight="50.0" prefWidth="149.0" styleClass="button_dodaj_proizvod" stylesheets="@../css/style.css" text="Dodaj" textFill="#bfcbce">
                <font>
                   <Font size="17.0" />
                </font>
@@ -115,7 +103,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="button_izmjena111" layoutX="673.0" layoutY="586.0" mnemonicParsing="false" onAction="#switchToIzmjenaSelected" prefHeight="41.0" prefWidth="151.0" styleClass="button_izmjena" stylesheets="/resources/css/style.css" text="OK" textFill="#bfcbce">
+            <Button fx:id="button_nazad" layoutX="-194.0" layoutY="605.0" mnemonicParsing="false" onAction="#switchToProizvodi" prefHeight="50.0" prefWidth="149.0" styleClass="button_dodaj_proizvod" stylesheets="@../css/style.css" text="Nazad" textFill="#bfcbce">
                <font>
                   <Font size="17.0" />
                </font>
@@ -123,26 +111,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label layoutX="162.0" layoutY="456.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Cijena:">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </Label>
-            <TextField layoutX="137.0" layoutY="500.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="0">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </TextField>
-            <Label layoutX="531.0" layoutY="347.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" text="Au grami:">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </Label>
-            <TextField layoutX="506.0" layoutY="391.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="0">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </TextField>
          </children>
       </Pane>
    </children>

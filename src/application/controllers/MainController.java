@@ -38,9 +38,6 @@ public class MainController {
 		switchToView("/resources/view/Izmjena_selected.fxml", event);
 	}
 
-	public void switchToDodajNoviProizvodSelected(ActionEvent event) throws IOException {
-		switchToView("/resources/view/Dodaj_proizvod_selected.fxml", event);
-	}
 
 	public void switchToIzmjenaNazivaModelaSelected(ActionEvent event) throws IOException {
 		switchToView("/resources/view/Izmjena_naziva_selected.fxml", event);

@@ -300,5 +300,14 @@ public class DisplayProductsController implements Initializable {
 				new Scene(FXMLLoader.load(getClass().getResource("/resources/view/DisplayProductsDeleted.fxml"))));
 		stage.show();
 	}
+	
+	@FXML
+	private void switchToAddNewProduct() throws IOException {
+		Node source = (Node) top_pane;
+		Stage stage = (Stage) source.getScene().getWindow();
+		stage.setScene(
+				new Scene(FXMLLoader.load(getClass().getResource("/resources/view/Dodaj_proizvod_selected.fxml"))));
+		stage.show();
+	}
 
 }

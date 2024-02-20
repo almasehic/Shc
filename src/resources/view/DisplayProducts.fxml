@@ -40,6 +40,14 @@
 										<Cursor fx:constant="HAND" />
 									</cursor>
 								</Button>
+                        <Button fx:id="button_novi_proizvod" layoutX="26.0" layoutY="121.0" mnemonicParsing="false" onAction="#switchToAddNewProduct" prefHeight="59.0" prefWidth="118.0" style="-fx-font-size: 15;" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Dodaj novi proizvod" textAlignment="CENTER" textFill="#bfcbce" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <font>
+                              <Font size="5.0" />
+                           </font>
+                        </Button>
 							</children>
 						</AnchorPane>
 					</children>
@@ -62,7 +70,7 @@
 										<Font size="18.0" />
 									</font>
 								</Label>
-								<Button onAction="#switchToDisplayProductDeleted" fx:id="button_delete" layoutX="679.0" layoutY="25.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="133.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Deleted" textFill="#bfcbce">
+								<Button fx:id="button_delete" layoutX="679.0" layoutY="25.0" mnemonicParsing="false" onAction="#switchToDisplayProductDeleted" prefHeight="37.0" prefWidth="133.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Deleted" textFill="#bfcbce">
 									<font>
 										<Font size="17.0" />
 									</font>
