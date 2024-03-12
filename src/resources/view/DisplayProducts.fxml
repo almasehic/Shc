@@ -57,7 +57,7 @@
 						<Pane fx:id="top_pane" prefHeight="86.0" prefWidth="988.0" styleClass="top_pane" stylesheets="@../css/style.css">
 							<children>
 								<TextField fx:id="searchField" layoutX="14.0" layoutY="40.0" prefHeight="37.0" prefWidth="216.0" />
-								<Button fx:id="button_print" layoutX="825.0" layoutY="25.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="133.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Print" textFill="#bfcbce">
+								<Button fx:id="button_print" layoutX="825.0" layoutY="25.0" mnemonicParsing="false" onAction="#handlePrintWithLayout" prefHeight="37.0" prefWidth="133.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Print" textFill="#bfcbce">
 									<font>
 										<Font size="17.0" />
 									</font>

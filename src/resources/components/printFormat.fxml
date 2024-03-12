@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Pagination?>
+
+<AnchorPane fx:id="printLayout" prefHeight="842"
+	prefWidth="595" stylesheets="@../css/printFormat.css"
+	xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+
+
+	<TableView fx:id="printTableView" layoutX="20" layoutY="20"
+		prefHeight="802" prefWidth="555">
+		<columns>
+			<TableColumn fx:id="kolekcijaColumn" maxWidth="110.0"
+				minWidth="110.0" prefWidth="110.0" resizable="false"
+				text="Collection">
+				<cellValueFactory>
+					<PropertyValueFactory
+						property="productCollection" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="tipColumn" maxWidth="90.0"
+				minWidth="90.0" prefWidth="90.0" resizable="false" text="Type">
+				<cellValueFactory>
+					<PropertyValueFactory property="productType" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="auColumn" maxWidth="60.0"
+				minWidth="60.0" prefWidth="60" resizable="false" text="Gold">
+				<cellValueFactory>
+					<PropertyValueFactory property="gold" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="agColumn" maxWidth="60.0"
+				minWidth="60.0" prefWidth="60" resizable="false" text="Silver">
+				<cellValueFactory>
+					<PropertyValueFactory property="silver" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="cijenaColumn" maxWidth="80.0"
+				minWidth="80.0" resizable="false" text="Price">
+				<cellValueFactory>
+					<PropertyValueFactory property="price" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="createdAtColumn" maxWidth="80.0"
+				minWidth="80.0" resizable="false" text="Created At">
+				<cellValueFactory>
+					<PropertyValueFactory property="createdAt" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="updatedAtColumn" maxWidth="80.0"
+				minWidth="80.0" resizable="false" text="Updated At">
+				<cellValueFactory>
+					<PropertyValueFactory property="updatedAt" />
+				</cellValueFactory>
+			</TableColumn>
+		</columns>
+	</TableView>
+		<Pagination fx:id="pagination" />
+	
+
+</AnchorPane>

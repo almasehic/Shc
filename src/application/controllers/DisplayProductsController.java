@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import application.componentHandler.NotificationHandler;
@@ -23,11 +24,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -35,10 +42,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class DisplayProductsController implements Initializable {
 
@@ -85,6 +95,8 @@ public class DisplayProductsController implements Initializable {
 	private TextField searchField;
 
 	private FilteredList<Product> filteredData;
+
+	private static final int ROWS_PER_PAGE = 10;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -300,7 +312,7 @@ public class DisplayProductsController implements Initializable {
 				new Scene(FXMLLoader.load(getClass().getResource("/resources/view/DisplayProductsDeleted.fxml"))));
 		stage.show();
 	}
-	
+
 	@FXML
 	private void switchToAddNewProduct() throws IOException {
 		Node source = (Node) top_pane;
@@ -308,6 +320,112 @@ public class DisplayProductsController implements Initializable {
 		stage.setScene(
 				new Scene(FXMLLoader.load(getClass().getResource("/resources/view/Dodaj_proizvod_selected.fxml"))));
 		stage.show();
+	}
+
+	private AnchorPane loadPrintLayout() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/components/printFormat.fxml"));
+		return loader.load();
+	}
+
+	@FXML
+	private void handlePrintWithLayout() {
+		try {
+			AnchorPane printLayout = loadPrintLayout();
+			populatePrintLayout(printLayout);
+
+			// Create a dialog to display the print layout
+			Dialog<Void> printDialog = new Dialog<>();
+			DialogPane dialogPane = printDialog.getDialogPane();
+			dialogPane.setContent(printLayout);
+			dialogPane.getButtonTypes().add(ButtonType.CLOSE); // Add a close button
+
+			// Create and add a print button
+			Button printButton = new Button("Print");
+			printButton.setOnAction(event -> {
+				printCombinedPages(printLayout);
+			});
+
+			VBox vbox = new VBox(printLayout, printButton);
+			dialogPane.setContent(vbox);
+
+			// Set the dialog style
+			Stage stage = (Stage) dialogPane.getScene().getWindow();
+			stage.initStyle(StageStyle.UTILITY);
+
+			// Show the dialog
+			printDialog.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void printCombinedPages(Node node) {
+		PrinterJob job = PrinterJob.createPrinterJob();
+		if (job != null) {
+			TableView<Product> printTableView = (TableView<Product>) node.lookup("#printTableView");
+			Pagination pagination = (Pagination) node.lookup("#pagination");
+			int pageCount = pagination.getPageCount();
+
+			try {
+				for (int pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+					pagination.setCurrentPageIndex(pageIndex);
+					int fromIndex = pageIndex * ROWS_PER_PAGE;
+					int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, printTableView.getItems().size());
+					printTableView.setItems(
+							FXCollections.observableArrayList(printTableView.getItems().subList(fromIndex, toIndex)));
+
+					// Create a new scene for each page
+					Scene pageScene = new Scene(new StackPane(printTableView));
+
+					// Create a group containing the root node of the scene
+					Group root = new Group();
+					root.getChildren().add(pageScene.getRoot());
+
+					// Print the group
+					boolean success = job.printPage(root);
+					if (!success) {
+						System.out.println("Printing failed for page " + (pageIndex + 1));
+						break;
+					}
+				}
+
+				job.endJob();
+			} catch (Exception e) {
+				System.out.println("An error occurred during printing: " + e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Printer job is null. Cannot initiate printing.");
+		}
+	}
+
+	private void populatePrintLayout(AnchorPane printLayout) {
+		try {
+			TableView<Product> printTableView = (TableView<Product>) printLayout.lookup("#printTableView");
+			Pagination pagination = (Pagination) printLayout.lookup("#pagination");
+
+			ObservableList<Product> products = prikazivanje_table.getItems();
+			int pageCount = (int) Math.ceil((double) products.size() / ROWS_PER_PAGE);
+
+			pagination.setPageCount(pageCount);
+			pagination.setPageFactory(pageIndex -> {
+				int fromIndex = pageIndex * ROWS_PER_PAGE;
+				int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, products.size());
+				List<Product> currentPageData = products.subList(fromIndex, toIndex);
+				printTableView.setItems(FXCollections.observableArrayList(currentPageData));
+
+				double totalColumnWidth = 0.0;
+				for (TableColumn<Product, ?> column : printTableView.getColumns()) {
+					totalColumnWidth += column.getWidth();
+				}
+				printTableView.setPrefWidth(totalColumnWidth);
+
+				return new AnchorPane(printTableView);
+			});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
