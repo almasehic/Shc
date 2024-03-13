@@ -28,6 +28,7 @@ import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -248,7 +249,21 @@ public class DisplayProductsController implements Initializable {
 	}
 
 	private void updateProduct(Product product) {
-		// Implement logic to update the product
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/view/UpdateProduct.fxml"));
+			Parent root = loader.load();
+
+			DodajProizvodController controller = loader.getController();
+
+			controller.initData(product);
+
+			Node source = (Node) top_pane;
+			Stage stage = (Stage) source.getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void loadProducts() {

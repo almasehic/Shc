@@ -50,7 +50,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField fx:id="textModel" layoutX="160.0" layoutY="227.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Upiši model: ">
+            <TextField fx:id="productCollectionField" layoutX="160.0" layoutY="227.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Upiši model: ">
                <font>
                   <Font size="23.0" />
                </font>
@@ -60,7 +60,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField fx:id="textTip" layoutX="160.0" layoutY="329.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Odaberi tip:">
+            <TextField fx:id="productTypeField" layoutX="160.0" layoutY="329.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Odaberi tip:">
                <font>
                   <Font size="23.0" />
                </font>
@@ -70,7 +70,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField fx:id="textAu" layoutX="160.0" layoutY="432.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
+            <TextField fx:id="goldField" layoutX="160.0" layoutY="432.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
                <font>
                   <Font size="23.0" />
                </font>
@@ -80,7 +80,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField fx:id="textAg" layoutX="424.0" layoutY="435.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
+            <TextField fx:id="silverField" layoutX="424.0" layoutY="435.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
                <font>
                   <Font size="23.0" />
                </font>
@@ -90,7 +90,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField fx:id="textPrice" layoutX="160.0" layoutY="541.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
+            <TextField fx:id="priceField" layoutX="160.0" layoutY="541.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="221.0" promptText="0">
                <font>
                   <Font size="23.0" />
                </font>

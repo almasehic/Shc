@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import application.componentHandler.NotificationHandler;
 import application.componentHandler.PopUpHandler;
+import application.models.Product;
 import application.service.DatabaseUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,25 +26,33 @@ public class DodajProizvodController {
 	private Scene scene;
 
 	@FXML
-	private TextField textModel;
+	private TextField productCollectionField;
 
 	@FXML
-	private TextField textTip;
+	private TextField productTypeField;
 
 	@FXML
-	private TextField textAu;
+	private TextField goldField;
 
 	@FXML
-	private TextField textAg;
+	private TextField silverField;
 
 	@FXML
-	private TextField textPrice;
+	private TextField priceField;
 
 	@FXML
 	private StackPane notificationPane;
 
 	@FXML
 	private StackPane popUpPane;
+
+	public void initData(Product product) {
+		productCollectionField.setText(product.getProductCollection());
+		productTypeField.setText(product.getProductType());
+		goldField.setText(String.valueOf(product.getGold()));
+		silverField.setText(String.valueOf(product.getSilver()));
+		priceField.setText(String.valueOf(product.getPrice()));
+	}
 
 	private void switchToView(String viewPath, ActionEvent event) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource(viewPath));
@@ -61,22 +70,77 @@ public class DodajProizvodController {
 		switchToView("/resources/view/FXMLHomePage.fxml", event);
 	}
 
+	public void updateProduct(ActionEvent event) {
+		String model = productCollectionField.getText();
+		String tip = productTypeField.getText();
+		String gramiAu = goldField.getText();
+		String gramiAg = silverField.getText();
+		String price = priceField.getText();
+
+		if (model.isEmpty() || tip.isEmpty() || gramiAu.isEmpty() || gramiAg.isEmpty() || price.isEmpty()) {
+			NotificationHandler.showNotification(notificationPane, "Error", "All fields must be filled in!");
+			return;
+		}
+
+		double Pr, Au, Ag;
+		try {
+			Au = Double.parseDouble(gramiAu);
+			Ag = Double.parseDouble(gramiAg);
+			Pr = Double.parseDouble(price);
+		} catch (NumberFormatException e) {
+			NotificationHandler.showNotification(notificationPane, "Error",
+					"Invalid input! Au grams, Ag grams, and Price must be integers.");
+			return;
+		}
+
+		try (Connection connection = DatabaseUtil.getConnection()) {
+			String updateSql = "UPDATE Product SET gold = ?, silver = ?, price = ? WHERE product_collection = ? AND product_type = ?";
+			try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
+				updateStatement.setDouble(1, Au);
+				updateStatement.setDouble(2, Ag);
+				updateStatement.setDouble(3, Pr);
+				updateStatement.setString(4, model);
+				updateStatement.setString(5, tip.toUpperCase());
+
+				int rowsAffected = updateStatement.executeUpdate();
+				if (rowsAffected > 0) {
+					NotificationHandler.showNotification(notificationPane, "Success", "Product updated successfully!");
+
+					try {
+						switchToMain(event);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					NotificationHandler.showNotification(notificationPane, "Error", "No product found for updating!");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			NotificationHandler.showNotification(notificationPane, "Error",
+					"Database connection error: " + e.getMessage());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			NotificationHandler.showNotification(notificationPane, "Error",
+					"Invalid quantity input. Please enter a valid number.");
+		}
+	}
+
 	public void addNewProduct(ActionEvent event) {
-		String model = textModel.getText();
-		String tip = textTip.getText();
-		String gramiAu = textAu.getText();
-		String gramiAg = textAg.getText();
-		String price = textPrice.getText();
+		String model = productCollectionField.getText();
+		String tip = productTypeField.getText();
+		String gramiAu = goldField.getText();
+		String gramiAg = silverField.getText();
+		String price = priceField.getText();
 
 		if (model.isEmpty() || tip.isEmpty() || gramiAu.isEmpty() || gramiAg.isEmpty() || price.isEmpty()) {
 			NotificationHandler.showNotification(notificationPane, "Error", "Sva polja moraju biti popunjena!");
 			return;
 		}
-		int Au, Ag;
-		double Pr;
+		double Pr, Au, Ag;
 		try {
-			Au = Integer.parseInt(gramiAu);
-			Ag = Integer.parseInt(gramiAg);
+			Au = Double.parseDouble(gramiAu);
+			Ag = Double.parseDouble(gramiAg);
 			Pr = Double.parseDouble(price);
 		} catch (NumberFormatException e) {
 			NotificationHandler.showNotification(notificationPane, "Error",
@@ -104,8 +168,8 @@ public class DodajProizvodController {
 													.prepareStatement(insertSql)) {
 												insertStatement.setString(1, model);
 												insertStatement.setString(2, tip.toUpperCase());
-												insertStatement.setInt(3, Au);
-												insertStatement.setInt(4, Ag);
+												insertStatement.setDouble(3, Au);
+												insertStatement.setDouble(4, Ag);
 												insertStatement.setDouble(5, Pr);
 												insertStatement.setInt(6, 0); // Default value for is_deleted
 

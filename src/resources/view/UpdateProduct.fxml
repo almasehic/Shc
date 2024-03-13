@@ -95,7 +95,7 @@
                   <Font size="23.0" />
                </font>
             </TextField>
-            <Button fx:id="button_dodaj" layoutX="705.0" layoutY="591.0" mnemonicParsing="false" onAction="#addNewProduct" prefHeight="50.0" prefWidth="149.0" styleClass="button_dodaj_proizvod" stylesheets="@../css/style.css" text="Dodaj" textFill="#bfcbce">
+            <Button fx:id="button_dodaj" layoutX="705.0" layoutY="591.0" mnemonicParsing="false" onAction="#updateProduct" prefHeight="50.0" prefWidth="149.0" styleClass="button_dodaj_proizvod" stylesheets="@../css/style.css" text="Update" textFill="#bfcbce">
                <font>
                   <Font size="17.0" />
                </font>
