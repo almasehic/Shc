@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
-import application.models.Transaction;
+import application.models.Product;
 import application.service.DatabaseUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -31,25 +31,31 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class TransakcijeController implements Initializable {
+public class DisplayStanjeController implements Initializable {
 
 	@FXML
-	private TableView<Transaction> prikazivanje_table;
+	private TableView<Product> prikazivanje_table;
 
 	@FXML
-	private TableColumn<Transaction, String> kolekcijaColumn;
+	private TableColumn<Product, String> kolekcijaColumn;
 
 	@FXML
-	private TableColumn<Transaction, String> tipColumn;
+	private TableColumn<Product, String> tipColumn;
 
 	@FXML
-	private TableColumn<Transaction, Double> quantityColumn;
+	private TableColumn<Product, Double> auColumn;
 
 	@FXML
-	private TableColumn<Transaction, String> statusColumn;
+	private TableColumn<Product, Double> agColumn;
 
 	@FXML
-	private TableColumn<Transaction, String> createdAtColumn;
+	private TableColumn<Product, String> cijenaColumn;
+
+	@FXML
+	private TableColumn<Product, String> createdAtColumn;
+
+	@FXML
+	private TableColumn<Product, String> quantityColumn;
 
 	@FXML
 	private Pane top_pane;
@@ -58,15 +64,12 @@ public class TransakcijeController implements Initializable {
 	private Label totalItemsLabel;
 
 	@FXML
-	private StackPane popUpPane;
-
-	@FXML
 	private StackPane notificationPane;
 
 	@FXML
 	private TextField searchField;
 
-	private FilteredList<Transaction> filteredData;
+	private FilteredList<Product> filteredData;
 
 	private String stanjeModel, stanjeTip;
 	private Date odDatuma, doDatuma;
@@ -75,11 +78,11 @@ public class TransakcijeController implements Initializable {
 		this.odDatuma = odDatuma;
 		this.doDatuma = doDatuma;
 
-		loadTransactionsAndUpdateTotalItemsCount();
+		loadProductsInStoreAndUpdateTotalItemsCount();
 	}
 
-	public void loadTransactionsAndUpdateTotalItemsCount() {
-		loadTransactions();
+	public void loadProductsInStoreAndUpdateTotalItemsCount() {
+		loadProductsInStore();
 
 		int totalItems = prikazivanje_table.getItems().size();
 		totalItemsLabel.setText("Total items: " + totalItems);
@@ -89,16 +92,24 @@ public class TransakcijeController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		kolekcijaColumn.setCellValueFactory(new PropertyValueFactory<>("productCollection"));
 		tipColumn.setCellValueFactory(new PropertyValueFactory<>("productType"));
-		quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-		statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+		auColumn.setCellValueFactory(new PropertyValueFactory<>("gold"));
+		agColumn.setCellValueFactory(new PropertyValueFactory<>("silver"));
+		cijenaColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 		createdAtColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+		quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+		cijenaColumn.setCellValueFactory(cellData -> {
+			Double cijena = cellData.getValue().getPrice();
+			String formattedCijena = formatCijena(cijena);
+			return new SimpleStringProperty(formattedCijena);
+		});
 
 		createdAtColumn.setCellValueFactory(cellData -> {
 			Timestamp timestamp = cellData.getValue().getCreatedAt();
 			return new SimpleStringProperty(formatTimestamp(timestamp));
 		});
 
-		loadTransactionsAndUpdateTotalItemsCount();
+		loadProductsInStoreAndUpdateTotalItemsCount();
 
 		filteredData = new FilteredList<>(prikazivanje_table.getItems(), p -> true);
 
@@ -112,17 +123,19 @@ public class TransakcijeController implements Initializable {
 	private void search(String keywords) {
 		String[] keywordArray = keywords.toLowerCase().split("\\s+");
 
-		filteredData.setPredicate(Transaction -> {
+		filteredData.setPredicate(product -> {
 			if (keywords == null || keywords.isEmpty()) {
 				return true;
 			}
 
 			for (String keyword : keywordArray) {
-				if (Transaction.getProductCollection().toLowerCase().contains(keyword)
-						|| Transaction.getProductType().toLowerCase().contains(keyword)
-						|| String.valueOf(Transaction.getQuantity()).toLowerCase().contains(keyword)
-						|| String.valueOf(Transaction.getStatus()).toLowerCase().contains(keyword)
-						|| Transaction.getCreatedAt().toString().contains(keyword)) {
+				if (product.getProductCollection().toLowerCase().contains(keyword)
+						|| product.getProductType().toLowerCase().contains(keyword)
+						|| String.valueOf(product.getGold()).toLowerCase().contains(keyword)
+						|| String.valueOf(product.getSilver()).toLowerCase().contains(keyword)
+						|| String.valueOf(product.getPrice()).toLowerCase().contains(keyword)
+						|| product.getCreatedAt().toString().contains(keyword)
+						|| String.valueOf(product.getQuantity()).contains(keyword)) {
 					return true;
 				}
 			}
@@ -130,55 +143,77 @@ public class TransakcijeController implements Initializable {
 		});
 	}
 
-	private void loadTransactions() {
-		ObservableList<Transaction> transactions = FXCollections.observableArrayList();
-		String selectSql = "SELECT t.*, p.product_collection, p.product_type " + "FROM Transaction t "
-				+ "INNER JOIN Product p ON t.product_id = p.id ";
+	private void loadProductsInStore() {
+		ObservableList<Product> products = FXCollections.observableArrayList();
+		String selectSql = "SELECT p.id, p.product_collection, p.product_type, p.gold, p.silver, p.price, p.is_deleted, p.created_at, p.updated_at, "
+				+ "SUM(CASE WHEN t.status = 'ADDED' OR t.status = 'REFUNDED' THEN t.quantity "
+				+ "WHEN t.status = 'SOLD' THEN -t.quantity " + "ELSE 0 END) AS total_quantity " + "FROM Product p "
+				+ "LEFT JOIN Transaction t ON p.id = t.product_id " + "WHERE p.is_deleted = FALSE ";
+
+		System.out.println(odDatuma + " " + doDatuma);
+		if (odDatuma != null && doDatuma != null) {
+			selectSql += "AND p.created_at BETWEEN ? AND ? ";
+		}
 
 		if (stanjeModel != null && !stanjeModel.isEmpty()) {
-			selectSql += " AND p.product_collection = ?";
+			selectSql += "AND p.product_collection = ? ";
 		}
 		if (stanjeTip != null && !stanjeTip.isEmpty()) {
-			selectSql += " AND p.product_type = ?";
-		}
-		if (odDatuma != null && doDatuma != null) {
-			selectSql += " AND t.created_at BETWEEN ? AND ?";
+			selectSql += "AND p.product_type = ? ";
 		}
 
-		selectSql += " ORDER BY t.created_at DESC";
+		selectSql += "GROUP BY p.id, p.product_collection, p.product_type, p.gold, p.silver, p.price, p.is_deleted, p.created_at, p.updated_at";
 
 		try (Connection connection = DatabaseUtil.getConnection();
 				PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
-
 			int parameterIndex = 1;
+			if (odDatuma != null && doDatuma != null) {
+				selectStatement.setDate(parameterIndex++, odDatuma);
+				selectStatement.setDate(parameterIndex++, doDatuma);
+			} else if (odDatuma != null) {
+				selectStatement.setDate(parameterIndex++, odDatuma);
+			} else if (doDatuma != null) {
+				selectStatement.setDate(parameterIndex++, doDatuma);
+			}
+
 			if (stanjeModel != null && !stanjeModel.isEmpty()) {
 				selectStatement.setString(parameterIndex++, stanjeModel);
 			}
 			if (stanjeTip != null && !stanjeTip.isEmpty()) {
 				selectStatement.setString(parameterIndex++, stanjeTip);
 			}
-			if (odDatuma != null && doDatuma != null) {
-				selectStatement.setDate(parameterIndex++, odDatuma);
-				selectStatement.setDate(parameterIndex++, doDatuma);
-			}
 
 			ResultSet resultSet = selectStatement.executeQuery();
 
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
-				int productId = resultSet.getInt("product_id");
-				int quantity = resultSet.getInt("quantity");
-				String status = resultSet.getString("status");
+				String productCollection = resultSet.getString("product_collection");
+				String productType = resultSet.getString("product_type");
+				double gold = resultSet.getDouble("gold");
+				double silver = resultSet.getDouble("silver");
+				double price = resultSet.getDouble("price");
+				boolean isDeleted = resultSet.getBoolean("is_deleted");
 				Timestamp createdAt = resultSet.getTimestamp("created_at");
+				Timestamp updatedAt = resultSet.getTimestamp("updated_at");
+				int quantity = resultSet.getInt("total_quantity");
 
-				Transaction transaction = new Transaction(id, productId, quantity, status, createdAt);
-				transactions.add(transaction);
+				Product product = new Product(id, productCollection, productType, gold, silver, price, isDeleted,
+						createdAt, updatedAt);
+				product.setQuantity(quantity);
+
+				products.add(product);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		prikazivanje_table.setItems(products);
+	}
 
-		prikazivanje_table.setItems(transactions);
+	private String formatCijena(Double cijena) {
+		if (cijena == null) {
+			return "";
+		}
+		return String.format("%.2f KM", cijena);
 	}
 
 	private String formatTimestamp(Timestamp timestamp) {
@@ -204,7 +239,7 @@ public class TransakcijeController implements Initializable {
 
 	public void setStanjeTip(String stanjeTip) {
 		this.stanjeTip = stanjeTip;
-		loadTransactionsAndUpdateTotalItemsCount();
+		loadProductsInStoreAndUpdateTotalItemsCount();
 	}
 
 	public String getStanjeModel() {
@@ -213,7 +248,7 @@ public class TransakcijeController implements Initializable {
 
 	public void setStanjeModel(String stanjeModel) {
 		this.stanjeModel = stanjeModel;
-		loadTransactionsAndUpdateTotalItemsCount();
+		loadProductsInStoreAndUpdateTotalItemsCount();
 	}
 
 	public Date getOdDatuma() {

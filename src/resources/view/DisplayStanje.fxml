@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.TransakcijeController">
+<Pane fx:id="root" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.DisplayStanjeController">
 	<children>
 		<StackPane fx:id="notificationPane" layoutX="895.0" layoutY="115.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0" prefWidth="255.0" />
 		<StackPane fx:id="popUpPane" prefHeight="680.0" prefWidth="1157.0" />
@@ -71,8 +71,10 @@
 									<columns>
 										<TableColumn fx:id="kolekcijaColumn" prefWidth="75.0" text="Kolekcija" />
 										<TableColumn fx:id="tipColumn" prefWidth="75.0" text="Tip" />
+										<TableColumn fx:id="auColumn" prefWidth="75.0" text="Au" />
+										<TableColumn fx:id="agColumn" prefWidth="75.0" text="Ag" />
+										<TableColumn fx:id="cijenaColumn" prefWidth="75.0" text="Cijena" />
 										<TableColumn fx:id="quantityColumn" prefWidth="75.0" text="Quantity" />
-										<TableColumn fx:id="statusColumn" prefWidth="75.0" text="Status" />
 										<TableColumn fx:id="createdAtColumn" prefWidth="75.0" text="Created At" />
 									</columns>
 									<columnResizePolicy>

@@ -35,7 +35,7 @@
 										</ImageView>
 									</children>
 								</Pane>
-								<Button fx:id="button_nazad" layoutX="26.0" layoutY="615.0" mnemonicParsing="false" onAction="#switchToMainView" prefHeight="35.0" prefWidth="118.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Nazad" textFill="#bfcbce">
+								<Button fx:id="button_nazad" layoutX="26.0" layoutY="615.0" mnemonicParsing="false" onAction="#switchBackToStanjeSelected" prefHeight="35.0" prefWidth="118.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Nazad" textFill="#bfcbce">
 									<cursor>
 										<Cursor fx:constant="HAND" />
 									</cursor>

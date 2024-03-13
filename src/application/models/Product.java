@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class Product {
 	private int id;
+	private int quantity;
 	private String productCollection;
 	private String productType;
 	private double gold;
@@ -104,6 +105,14 @@ public class Product {
 		return "Product{" + "id=" + id + ", productCollection='" + productCollection + '\'' + ", productType='"
 				+ productType + '\'' + ", gold=" + gold + ", silver=" + silver + ", price=" + price + ", isDeleted="
 				+ isDeleted + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 }

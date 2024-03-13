@@ -104,7 +104,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="button_stanje" layoutX="548.0" layoutY="586.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="151.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Stanje" textFill="#bfcbce">
+            <Button fx:id="button_stanje" onAction="#switchToDisplayStanje" layoutX="548.0" layoutY="586.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="151.0" styleClass="button_izmjena" stylesheets="@../css/style.css" text="Stanje" textFill="#bfcbce">
                <font>
                   <Font size="17.0" />
                </font>
