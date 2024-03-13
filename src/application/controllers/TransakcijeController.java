@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
+import application.componentHandler.NotificationHandler;
+import application.componentHandler.PopUpHandler;
 import application.models.Transaction;
 import application.service.DatabaseUtil;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,13 +22,20 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -50,6 +59,9 @@ public class TransakcijeController implements Initializable {
 
 	@FXML
 	private TableColumn<Transaction, String> createdAtColumn;
+
+	@FXML
+	private TableColumn<Transaction, Void> actionsColumn;
 
 	@FXML
 	private Pane top_pane;
@@ -100,6 +112,31 @@ public class TransakcijeController implements Initializable {
 
 		loadTransactionsAndUpdateTotalItemsCount();
 
+		Image deleteIcon = new Image(getClass().getResourceAsStream("/resources/images/trash.png"));
+
+		actionsColumn.setCellFactory(param -> new TableCell<>() {
+			private final Button deleteButton = createIconButton(deleteIcon);
+			{
+				deleteButton.setOnAction(event -> {
+					Transaction transaction = getTableView().getItems().get(getIndex());
+					showDeleteConfirmation(transaction);
+				});
+			}
+
+			@Override
+			protected void updateItem(Void item, boolean empty) {
+				super.updateItem(item, empty);
+				if (empty) {
+					setGraphic(null);
+				} else {
+					HBox buttonsBox = new HBox(deleteButton);
+					buttonsBox.setSpacing(20);
+					buttonsBox.setAlignment(Pos.CENTER);
+					setGraphic(buttonsBox);
+				}
+			}
+		});
+
 		filteredData = new FilteredList<>(prikazivanje_table.getItems(), p -> true);
 
 		prikazivanje_table.setItems(filteredData);
@@ -107,6 +144,59 @@ public class TransakcijeController implements Initializable {
 		searchField.textProperty().addListener((observable, oldValue, newValue) -> {
 			search(newValue);
 		});
+	}
+
+	private Button createIconButton(Image icon) {
+		ImageView imageView = new ImageView(icon);
+		imageView.setFitWidth(20);
+		imageView.setFitHeight(20);
+
+		Button button = new Button();
+		button.setGraphic(imageView);
+		button.setStyle("-fx-background-color: transparent;");
+		button.setMaxSize(40, 40);
+
+		button.setOnMouseEntered(e -> button.setCursor(Cursor.HAND));
+		button.setOnMouseExited(e -> button.setCursor(Cursor.DEFAULT));
+
+		return button;
+	}
+
+	private void showDeleteConfirmation(Transaction transaction) {
+		PopUpHandler.showPopup(popUpPane, "Confirm Deletion", "Are you sure you want to delete this transaction?",
+				confirmation -> {
+					if (confirmation) {
+						deleteTransaction(transaction);
+					}
+				});
+	}
+
+	private void deleteTransaction(Transaction transaction) {
+		String updateSql = "DELETE FROM transaction WHERE id = ?";
+
+		try (Connection connection = DatabaseUtil.getConnection();
+				PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
+			updateStatement.setInt(1, transaction.getId());
+			int rowsAffected = updateStatement.executeUpdate();
+
+			if (rowsAffected > 0) {
+				NotificationHandler.showNotification(notificationPane, "Success",
+						"Transaction marked as deleted successfully.");
+
+				loadTransactions();
+
+				filteredData = new FilteredList<>(prikazivanje_table.getItems(), p -> true);
+
+				prikazivanje_table.setItems(filteredData);
+			} else {
+				NotificationHandler.showNotification(notificationPane, "Error",
+						"Failed to mark transaction as deleted.");
+			}
+		} catch (SQLException e) {
+			NotificationHandler.showNotification(notificationPane, "Error",
+					"An error occurred while marking the Transaction as deleted.");
+			e.printStackTrace();
+		}
 	}
 
 	private void search(String keywords) {
