@@ -46,12 +46,16 @@ public class DodajProizvodController {
 	@FXML
 	private StackPane popUpPane;
 
+	private int product_id;
+
 	public void initData(Product product) {
 		productCollectionField.setText(product.getProductCollection());
 		productTypeField.setText(product.getProductType());
 		goldField.setText(String.valueOf(product.getGold()));
 		silverField.setText(String.valueOf(product.getSilver()));
 		priceField.setText(String.valueOf(product.getPrice()));
+
+		product_id = product.getId();
 	}
 
 	private void switchToView(String viewPath, ActionEvent event) throws IOException {
@@ -94,13 +98,14 @@ public class DodajProizvodController {
 		}
 
 		try (Connection connection = DatabaseUtil.getConnection()) {
-			String updateSql = "UPDATE Product SET gold = ?, silver = ?, price = ? WHERE product_collection = ? AND product_type = ?";
+			String updateSql = "UPDATE Product SET gold = ?, silver = ?, price = ?, product_collection = ?, product_type = ? WHERE id = ?";
 			try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
 				updateStatement.setDouble(1, Au);
 				updateStatement.setDouble(2, Ag);
 				updateStatement.setDouble(3, Pr);
 				updateStatement.setString(4, model);
 				updateStatement.setString(5, tip.toUpperCase());
+				updateStatement.setInt(6, product_id);
 
 				int rowsAffected = updateStatement.executeUpdate();
 				if (rowsAffected > 0) {

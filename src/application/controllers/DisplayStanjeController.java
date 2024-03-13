@@ -117,6 +117,10 @@ public class DisplayStanjeController implements Initializable {
 
 		searchField.textProperty().addListener((observable, oldValue, newValue) -> {
 			search(newValue);
+			prikazivanje_table.setItems(filteredData);
+
+			int totalItems = prikazivanje_table.getItems().size();
+			totalItemsLabel.setText("Total items: " + totalItems);
 		});
 	}
 
@@ -150,7 +154,6 @@ public class DisplayStanjeController implements Initializable {
 				+ "WHEN t.status = 'SOLD' THEN -t.quantity " + "ELSE 0 END) AS total_quantity " + "FROM Product p "
 				+ "LEFT JOIN Transaction t ON p.id = t.product_id " + "WHERE p.is_deleted = FALSE ";
 
-		System.out.println(odDatuma + " " + doDatuma);
 		if (odDatuma != null && doDatuma != null) {
 			selectSql += "AND p.created_at BETWEEN ? AND ? ";
 		}

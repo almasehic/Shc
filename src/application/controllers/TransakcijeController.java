@@ -143,6 +143,10 @@ public class TransakcijeController implements Initializable {
 
 		searchField.textProperty().addListener((observable, oldValue, newValue) -> {
 			search(newValue);
+			prikazivanje_table.setItems(filteredData);
+
+			int totalItems = prikazivanje_table.getItems().size();
+			totalItemsLabel.setText("Total items: " + totalItems);
 		});
 	}
 
@@ -202,17 +206,18 @@ public class TransakcijeController implements Initializable {
 	private void search(String keywords) {
 		String[] keywordArray = keywords.toLowerCase().split("\\s+");
 
-		filteredData.setPredicate(Transaction -> {
+		filteredData.setPredicate(transaction -> {
 			if (keywords == null || keywords.isEmpty()) {
 				return true;
 			}
 
 			for (String keyword : keywordArray) {
-				if (Transaction.getProductCollection().toLowerCase().contains(keyword)
-						|| Transaction.getProductType().toLowerCase().contains(keyword)
-						|| String.valueOf(Transaction.getQuantity()).toLowerCase().contains(keyword)
-						|| String.valueOf(Transaction.getStatus()).toLowerCase().contains(keyword)
-						|| Transaction.getCreatedAt().toString().contains(keyword)) {
+
+				if (transaction.getProductCollection().toLowerCase().contains(keyword)
+						|| transaction.getProductType().toLowerCase().contains(keyword)
+						|| String.valueOf(transaction.getQuantity()).toLowerCase().contains(keyword)
+						|| String.valueOf(transaction.getStatus()).toLowerCase().contains(keyword)
+						|| transaction.getCreatedAt().toString().contains(keyword)) {
 					return true;
 				}
 			}
