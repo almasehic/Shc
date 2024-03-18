@@ -9,97 +9,151 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1157.0" styleClass="root" stylesheets="/resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainController">
-   <children>
-      <VBox prefHeight="532.0" prefWidth="240.0">
-         <children>
-            <AnchorPane fx:id="side_anchorpane" prefHeight="687.0" prefWidth="276.0" styleClass="side_anchorpane" stylesheets="@../css/style.css">
-               <children>
-                  <Pane fx:id="inner_pane" layoutX="18.0" layoutY="14.0" prefHeight="90.0" prefWidth="207.0" styleClass="inner_pane" stylesheets="/resources/css/style.css">
-                     <children>
-                        <ImageView fitHeight="79.0" fitWidth="108.0" layoutX="64.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../images/logo240.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </Pane>
-                  <Button fx:id="button_ulaz" layoutX="28.0" layoutY="228.0" mnemonicParsing="false" onAction="#switchToUlazSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@../css/style.css" text="ULAZ" textFill="#303655">
-                     <font>
-                        <Font name="Verdana" size="22.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="button_izlaz" layoutX="28.0" layoutY="348.0" mnemonicParsing="false" onAction="#switchToIzlazSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@../css/style.css" text="IZLAZ" textFill="#303655">
-                     <font>
-                        <Font name="Verdana" size="22.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="button_stanje" layoutX="28.0" layoutY="467.0" mnemonicParsing="false" onAction="#switchToStanjeSelected" prefHeight="70.0" prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje" stylesheets="@../css/style.css" text="STANJE" textFill="#303655">
-                     <font>
-                        <Font name="Verdana" size="22.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-               </children>
-            </AnchorPane>
-         </children>
-      </VBox>
-      <Pane prefHeight="680.0" prefWidth="918.0" style="-fx-background-color: BFCBCE;" stylesheets="@../css/style.css">
-         <children>
-            <Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0" styleClass="top_pane" stylesheets="@../css/style.css">
-               <children>
-                  <Button fx:id="button_proizvodi" layoutX="666.0" layoutY="27.0" mnemonicParsing="false" onAction="#switchToProizvodi" prefHeight="50.0" prefWidth="200.0" styleClass="button_dodaj_proizvod" stylesheets="@../css/style.css" text="Proizvodi" textFill="#bfcbce">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-               </children>
-            </Pane>
-            <Label layoutX="185.0" layoutY="183.0" minWidth="-Infinity" opacity="0.3" prefHeight="50.0" prefWidth="330.0" text="Model:">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </Label>
-            <TextField disable="true" layoutX="160.0" layoutY="227.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Upiši model: ">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </TextField>
-            <Label layoutX="185.0" layoutY="285.0" minWidth="-Infinity" opacity="0.3" prefHeight="50.0" prefWidth="330.0" text="Tip:">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </Label>
-            <TextField disable="true" layoutX="160.0" layoutY="329.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="Odaberi tip:">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </TextField>
-            <Label layoutX="185.0" layoutY="388.0" minWidth="-Infinity" opacity="0.3" prefHeight="50.0" prefWidth="330.0" text="Kolicina:">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </Label>
-            <TextField disable="true" layoutX="160.0" layoutY="432.0" minWidth="-Infinity" prefHeight="50.0" prefWidth="330.0" promptText="0">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </TextField>
-         </children>
-      </Pane>
-   </children>
-</HBox>
+<StackPane xmlns="http://javafx.com/javafx/21"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="application.controllers.MainController">
+	<children>
+
+
+		<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity"
+			minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0"
+			prefWidth="1157.0" styleClass="root"
+			stylesheets="/resources/css/style.css">
+			<children>
+
+				<VBox prefHeight="532.0" prefWidth="240.0">
+					<children>
+						<AnchorPane fx:id="side_anchorpane" prefHeight="687.0"
+							prefWidth="276.0" styleClass="side_anchorpane"
+							stylesheets="@../css/style.css">
+							<children>
+								<Pane fx:id="inner_pane" layoutX="18.0" layoutY="14.0"
+									prefHeight="90.0" prefWidth="207.0" styleClass="inner_pane"
+									stylesheets="/resources/css/style.css">
+									<children>
+										<ImageView fitHeight="79.0" fitWidth="108.0"
+											layoutX="64.0" layoutY="6.0" pickOnBounds="true"
+											preserveRatio="true">
+											<image>
+												<Image url="@../images/logo240.png" />
+											</image>
+										</ImageView>
+									</children>
+								</Pane>
+								<Button fx:id="button_ulaz" layoutX="28.0"
+									layoutY="228.0" mnemonicParsing="false"
+									onAction="#switchToUlazSelected" prefHeight="70.0"
+									prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje"
+									stylesheets="@../css/style.css" text="ULAZ" textFill="#303655">
+									<font>
+										<Font name="Verdana" size="22.0" />
+									</font>
+									<cursor>
+										<Cursor fx:constant="HAND" />
+									</cursor>
+								</Button>
+								<Button fx:id="button_izlaz" layoutX="28.0"
+									layoutY="348.0" mnemonicParsing="false"
+									onAction="#switchToIzlazSelected" prefHeight="70.0"
+									prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje"
+									stylesheets="@../css/style.css" text="IZLAZ" textFill="#303655">
+									<font>
+										<Font name="Verdana" size="22.0" />
+									</font>
+									<cursor>
+										<Cursor fx:constant="HAND" />
+									</cursor>
+								</Button>
+								<Button fx:id="button_stanje" layoutX="28.0"
+									layoutY="467.0" mnemonicParsing="false"
+									onAction="#switchToStanjeSelected" prefHeight="70.0"
+									prefWidth="187.0" styleClass="button_ulaz_izlaz_stanje"
+									stylesheets="@../css/style.css" text="STANJE"
+									textFill="#303655">
+									<font>
+										<Font name="Verdana" size="22.0" />
+									</font>
+									<cursor>
+										<Cursor fx:constant="HAND" />
+									</cursor>
+								</Button>
+							</children>
+						</AnchorPane>
+					</children>
+				</VBox>
+				<Pane prefHeight="680.0" prefWidth="918.0"
+					style="-fx-background-color: BFCBCE;"
+					stylesheets="@../css/style.css">
+					<children>
+						<Pane fx:id="top_pane" prefHeight="104.0" prefWidth="918.0"
+							styleClass="top_pane" stylesheets="@../css/style.css">
+							<children>
+								<Button fx:id="button_proizvodi" layoutX="666.0"
+									layoutY="27.0" mnemonicParsing="false"
+									onAction="#switchToProizvodi" prefHeight="50.0"
+									prefWidth="200.0" styleClass="button_dodaj_proizvod"
+									stylesheets="@../css/style.css" text="Proizvodi"
+									textFill="#bfcbce">
+									<font>
+										<Font size="17.0" />
+									</font>
+									<cursor>
+										<Cursor fx:constant="HAND" />
+									</cursor>
+								</Button>
+							</children>
+						</Pane>
+						<Label layoutX="185.0" layoutY="183.0" minWidth="-Infinity"
+							opacity="0.3" prefHeight="50.0" prefWidth="330.0" text="Model:">
+							<font>
+								<Font size="23.0" />
+							</font>
+						</Label>
+						<TextField disable="true" layoutX="160.0"
+							layoutY="227.0" minWidth="-Infinity" prefHeight="50.0"
+							prefWidth="330.0" promptText="Upiši model: ">
+							<font>
+								<Font size="23.0" />
+							</font>
+						</TextField>
+						<Label layoutX="185.0" layoutY="285.0" minWidth="-Infinity"
+							opacity="0.3" prefHeight="50.0" prefWidth="330.0" text="Tip:">
+							<font>
+								<Font size="23.0" />
+							</font>
+						</Label>
+						<TextField disable="true" layoutX="160.0"
+							layoutY="329.0" minWidth="-Infinity" prefHeight="50.0"
+							prefWidth="330.0" promptText="Odaberi tip:">
+							<font>
+								<Font size="23.0" />
+							</font>
+						</TextField>
+						<Label layoutX="185.0" layoutY="388.0" minWidth="-Infinity"
+							opacity="0.3" prefHeight="50.0" prefWidth="330.0"
+							text="Kolicina:">
+							<font>
+								<Font size="23.0" />
+							</font>
+						</Label>
+						<TextField disable="true" layoutX="160.0"
+							layoutY="432.0" minWidth="-Infinity" prefHeight="50.0"
+							prefWidth="330.0" promptText="0">
+							<font>
+								<Font size="23.0" />
+							</font>
+						</TextField>
+						<StackPane fx:id="notificationPane" layoutX="653.0"
+							layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity"
+							minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0"
+							prefWidth="255.0" />
+					</children>
+				</Pane>
+			</children>
+		</HBox>
+	</children>
+</StackPane>
