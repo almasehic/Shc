@@ -2,6 +2,7 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -118,6 +119,16 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+            <CheckBox fx:id="checkbox_fix" layoutX="641.0" layoutY="258.0" mnemonicParsing="false" text="Ispravka">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="checkbox_returned" layoutX="641.0" layoutY="322.0" mnemonicParsing="false" text="Vraceno">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </CheckBox>
          </children>
       </Pane>
    </children>

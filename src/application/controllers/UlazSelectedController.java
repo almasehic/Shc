@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -37,6 +38,12 @@ public class UlazSelectedController {
 
 	@FXML
 	private StackPane popUpPane;
+	
+	@FXML
+    private CheckBox checkbox_fix;
+
+    @FXML
+    private CheckBox checkbox_returned;
 
 	@FXML
 	private void handleOkButton() {
@@ -63,6 +70,19 @@ public class UlazSelectedController {
 					"Quantity cannot be zero or less. Please enter a valid quantity.");
 			return;
 		}
+		
+		String status;
+		
+		if (!checkbox_fix.isSelected() && !checkbox_returned.isSelected()) { //if neither are selected, just ADD
+			status = "ADDED";
+		} else if (checkbox_fix.isSelected() && !checkbox_returned.isSelected()) { //return is selected, status RETURNED
+            status = "FIX ADD";
+        } else if (checkbox_returned.isSelected() && !checkbox_fix.isSelected()) { //fix is selected, status FIX
+            status = "REFUNDED";
+        } else {
+            NotificationHandler.showNotification(notificationPane, "Error", "Please select only one status.");
+            return;
+        }
 
 		try (Connection connection = DatabaseUtil.getConnection()) {
 			String selectSql = "SELECT id, silver, gold, price FROM Product WHERE product_collection = ? AND product_type = ?";
@@ -87,7 +107,7 @@ public class UlazSelectedController {
 													.prepareStatement(insertSql)) {
 												insertStatement.setInt(1, product_id);
 												insertStatement.setInt(2, kolicina);
-												insertStatement.setString(3, "ADDED");
+												insertStatement.setString(3, status);
 												insertStatement.executeUpdate();
 											}
 											NotificationHandler.showNotification(notificationPane, "Success",

@@ -150,8 +150,8 @@ public class DisplayStanjeController implements Initializable {
 	private void loadProductsInStore() {
 		ObservableList<Product> products = FXCollections.observableArrayList();
 		String selectSql = "SELECT p.id, p.product_collection, p.product_type, p.gold, p.silver, p.price, p.is_deleted, p.created_at, p.updated_at, "
-				+ "SUM(CASE WHEN t.status = 'ADDED' OR t.status = 'REFUNDED' THEN t.quantity "
-				+ "WHEN t.status = 'SOLD' THEN -t.quantity " + "ELSE 0 END) AS total_quantity " + "FROM Product p "
+				+ "SUM(CASE WHEN t.status = 'ADDED' OR t.status = 'REFUNDED' OR t.status = 'FIX ADD' THEN t.quantity "
+				+ "WHEN t.status = 'SOLD' OR t.status = 'FIX SOLD' THEN -t.quantity " + "ELSE 0 END) AS total_quantity " + "FROM Product p "
 				+ "LEFT JOIN Transaction t ON p.id = t.product_id " + "WHERE p.is_deleted = FALSE ";
 
 		if (odDatuma != null && doDatuma != null) {

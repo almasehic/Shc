@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -37,6 +38,9 @@ public class IzlazSelectedController {
 
 	@FXML
 	private StackPane popUpPane;
+	
+	@FXML
+    private CheckBox checkbox_fix;
 
 	@FXML
 	private void handleOkButton() {
@@ -63,9 +67,17 @@ public class IzlazSelectedController {
 					"Quantity cannot be zero or less. Please enter a valid quantity.");
 			return;
 		}
+		
+		String status;
+		
+		if (checkbox_fix.isSelected()) {
+			status = "FIX SOLD";
+		} else {
+			status = "SOLD";
+		}
 
 		try (Connection connection = DatabaseUtil.getConnection()) {
-			String selectSql = "SELECT id FROM Product WHERE product_collection = ? AND product_type = ?";
+			String selectSql = "SELECT id, silver, gold, price FROM Product WHERE product_collection = ? AND product_type = ?";
 			try (PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
 				selectStatement.setString(1, model);
 				selectStatement.setString(2, tip.toUpperCase());
@@ -73,45 +85,55 @@ public class IzlazSelectedController {
 				try (ResultSet resultSet = selectStatement.executeQuery()) {
 					if (resultSet.next()) {
 						int product_id = resultSet.getInt("id");
+						double silver = resultSet.getDouble("silver");
+						double gold = resultSet.getDouble("gold");
+						double price = resultSet.getDouble("price");
 
-						String checkSql = "SELECT SUM(CASE " + "WHEN status = 'ADDED' THEN quantity "
-								+ "WHEN status = 'SOLD' THEN -1 * quantity " + "ELSE 0 " + "END) AS current "
+						String checkSql = "SELECT SUM(CASE " 
+								+ "WHEN status = 'ADDED' OR status = 'FIX ADD' OR status = 'REFUNDED' THEN quantity "
+								+ "WHEN status = 'SOLD' OR status = 'FIX SOLD' THEN -1 * quantity " 
+								+ "ELSE 0 " + "END) AS current "
 								+ "FROM Transaction " + "WHERE product_id = ?";
 
 						try (PreparedStatement checkStatement = connection.prepareStatement(checkSql)) {
 							checkStatement.setInt(1, product_id);
 							try (ResultSet checkResultSet = checkStatement.executeQuery()) {
 								if (checkResultSet.next()) {
-									int currentQuantity = checkResultSet.getInt("current");
-									if (currentQuantity >= kolicina) {
-										PopUpHandler.showPopup(popUpPane, "Potvrdi prodaju",
-												"Da li ste sigurni da zelite prodati proizvod?", (isConfirmed) -> {
-													if (isConfirmed) {
-														try {
-															Connection insertConnection = DatabaseUtil.getConnection();
-															String insertSql = "INSERT INTO Transaction (product_id, quantity, status) VALUES (?, ?, ?)";
-															try (PreparedStatement insertStatement = insertConnection
-																	.prepareStatement(insertSql)) {
-																insertStatement.setInt(1, product_id);
-																insertStatement.setInt(2, kolicina);
-																insertStatement.setString(3, "SOLD");
-																insertStatement.executeUpdate();
-
-																NotificationHandler.showNotification(notificationPane,
-																		"Success", "Data saved to the database!");
-															}
-														} catch (SQLException e) {
-															e.printStackTrace();
-															NotificationHandler.showNotification(notificationPane,
-																	"Error",
-																	"Failed to create transaction: " + e.getMessage());
-														}
-													}
-												});
+									int currentQuantity = checkResultSet.getInt("current"); 
+									
+									String title, body;
+									
+									if(currentQuantity >= kolicina) {
+										title = "Potvrdi prodaju\nDa li ste sigurni da zelite prodati proizvod?";
+										body = model + "     " + tip + "     " + gold + "     " + silver + "     " + price;
 									} else {
-										NotificationHandler.showNotification(notificationPane, "Error",
-												"Not enough quantity available in inventory!");
+										title = "Stanje ovog proizvoda ce uci u minus!\nDa li ste sigurni da zelite prodati proizvod?";
+										body = model + "     " + tip + "     " + gold + "     " + silver + "     " + price;
 									}
+									PopUpHandler.showPopup(popUpPane, title, body, (isConfirmed) -> {
+												if (isConfirmed) {
+													try {
+														Connection insertConnection = DatabaseUtil.getConnection();
+														String insertSql = "INSERT INTO Transaction (product_id, quantity, status) VALUES (?, ?, ?)";
+														try (PreparedStatement insertStatement = insertConnection
+																.prepareStatement(insertSql)) {
+															insertStatement.setInt(1, product_id);
+															insertStatement.setInt(2, kolicina);
+															insertStatement.setString(3, status);
+															insertStatement.executeUpdate();
+
+															NotificationHandler.showNotification(notificationPane,
+																	"Success", "Data saved to the database!");
+														}
+													} catch (SQLException e) {
+														e.printStackTrace();
+														NotificationHandler.showNotification(notificationPane,
+																"Error",
+																"Failed to create transaction: " + e.getMessage());
+													}
+												}
+											});
+									
 								} else {
 									NotificationHandler.showNotification(notificationPane, "Error",
 											"Failed to check current quantity!");
