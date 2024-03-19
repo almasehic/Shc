@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -20,6 +21,10 @@ public class StanjeSelectedController {
 	TextField stanje_model, stanje_tip;
 	@FXML
 	DatePicker od_datuma, do_datuma;
+	@FXML
+	CheckBox checkbox_beznula;
+	@FXML
+	CheckBox checkbox_minus;
 
 	private Stage stage;
 	private Scene scene;
@@ -48,7 +53,8 @@ public class StanjeSelectedController {
 		} else if (do_datuma.getValue() != null) {
 			controller.setDates(Date.valueOf(LocalDate.of(1900, 1, 1)), Date.valueOf(do_datuma.getValue()));
 		}
-
+		
+		
 		controller.setStanjeModel(stanje_model.getText());
 		controller.setStanjeTip(stanje_tip.getText());
 
@@ -70,7 +76,24 @@ public class StanjeSelectedController {
 		} else if (do_datuma.getValue() != null) {
 			controller.setDates(Date.valueOf(LocalDate.of(1900, 1, 1)), Date.valueOf(do_datuma.getValue()));
 		}
-
+		
+		Boolean without_zero;
+		Boolean minus;
+		
+		if(checkbox_beznula.isSelected()) {
+			without_zero = true;
+		}else {
+			without_zero = false;
+		}
+		
+		if(checkbox_minus.isSelected()) {
+			minus = true;
+		}else {
+			minus = false;
+		}
+		
+		controller.setBooleanZero(without_zero);
+		controller.setBooleanMinus(minus);
 		controller.setStanjeModel(stanje_model.getText());
 		controller.setStanjeTip(stanje_tip.getText());
 

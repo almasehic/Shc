@@ -81,15 +81,39 @@
 										<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
 									</columnResizePolicy>
 								</TableView>
-								<Label fx:id="totalItemsLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="993.0" text="Total: ">
-									<font>
-										<Font size="16.0" />
-									</font>
-									<VBox.margin>
-										<Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
-									</VBox.margin>
-
-								</Label>
+                        <HBox>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                           </VBox.margin>
+                           <children>
+      								<Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="25.0" prefWidth="133.0" HBox.hgrow="NEVER">
+      									<font>
+      										<Font size="16.0" />
+      									</font>
+      
+      								</Label>
+                              <Label fx:id="totalGoldLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="25.0" prefWidth="155.0" text="Total Au:">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="totalSilverLabel" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="199.0" text="Total Ag:">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="totalPriceLabel" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="240.0" text="Total cijena:">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="totalItemsLabel" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="261.0" text="#Proizvoda:">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
 							</children>
 						</VBox>
 					</children>

@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
+import application.componentHandler.NotificationHandler;
 import application.models.Product;
 import application.service.DatabaseUtil;
 import javafx.beans.property.SimpleStringProperty;
@@ -62,6 +63,12 @@ public class DisplayStanjeController implements Initializable {
 
 	@FXML
 	private Label totalItemsLabel;
+	@FXML
+	private Label totalGoldLabel;
+	@FXML
+	private Label totalSilverLabel;
+	@FXML
+	private Label totalPriceLabel;
 
 	@FXML
 	private StackPane notificationPane;
@@ -73,6 +80,8 @@ public class DisplayStanjeController implements Initializable {
 
 	private String stanjeModel, stanjeTip;
 	private Date odDatuma, doDatuma;
+	private Boolean noZero = false;
+	private Boolean minus = false;
 
 	public void setDates(Date odDatuma, Date doDatuma) {
 		this.odDatuma = odDatuma;
@@ -86,6 +95,7 @@ public class DisplayStanjeController implements Initializable {
 
 		int totalItems = prikazivanje_table.getItems().size();
 		totalItemsLabel.setText("Total items: " + totalItems);
+	
 	}
 
 	@Override
@@ -119,8 +129,23 @@ public class DisplayStanjeController implements Initializable {
 			search(newValue);
 			prikazivanje_table.setItems(filteredData);
 
+			double totalGold = 0.0;
+	        double totalSilver = 0.0;
+	        double totalPrice = 0.0;
+	        
+	        for (Product product : filteredData) {
+	            totalGold += product.getGold()*product.getQuantity();
+	            totalSilver += product.getSilver()*product.getQuantity();
+	            totalPrice += product.getPrice()*product.getQuantity();
+	        }
+	        
+	        totalGoldLabel.setText("Total au:   " + String.valueOf(totalGold) + " g");
+	        totalSilverLabel.setText("Total ag:   " + String.valueOf(totalSilver) + " g");
+	        totalPriceLabel.setText("Total price:   " + String.valueOf(totalPrice) + " KM");
+	        
 			int totalItems = prikazivanje_table.getItems().size();
 			totalItemsLabel.setText("Total items: " + totalItems);
+			
 		});
 	}
 
@@ -148,12 +173,29 @@ public class DisplayStanjeController implements Initializable {
 	}
 
 	private void loadProductsInStore() {
+		double totalGold = 0.0;
+		double totalSilver = 0.0;
+		double totalPrice = 0.0;
 		ObservableList<Product> products = FXCollections.observableArrayList();
 		String selectSql = "SELECT p.id, p.product_collection, p.product_type, p.gold, p.silver, p.price, p.is_deleted, p.created_at, p.updated_at, "
-				+ "SUM(CASE WHEN t.status = 'ADDED' OR t.status = 'REFUNDED' OR t.status = 'FIX ADD' THEN t.quantity "
-				+ "WHEN t.status = 'SOLD' OR t.status = 'FIX SOLD' THEN -t.quantity " + "ELSE 0 END) AS total_quantity " + "FROM Product p "
-				+ "LEFT JOIN Transaction t ON p.id = t.product_id " + "WHERE p.is_deleted = FALSE ";
+	            + "(SELECT SUM(CASE WHEN t.status = 'ADDED' OR t.status = 'REFUNDED' OR t.status = 'FIX ADD' THEN t.quantity "
+	            + "WHEN t.status = 'SOLD' OR t.status = 'FIX SOLD' THEN -t.quantity ELSE 0 END) "
+	            + "FROM Transaction t WHERE p.id = t.product_id) AS total_quantity "
+	            + "FROM Product p LEFT JOIN Transaction t ON p.id = t.product_id WHERE p.is_deleted = FALSE ";
 
+		String operation = null;
+		if (noZero) {
+			operation = ">";
+		} else if (minus) {
+			operation = "<";
+		}
+		
+	    if (noZero || minus) {
+	    	selectSql += "AND (SELECT SUM(CASE WHEN t.status = 'ADDED' OR t.status = 'REFUNDED' OR t.status = 'FIX ADD' THEN t.quantity "
+                    + "WHEN t.status = 'SOLD' OR t.status = 'FIX SOLD' THEN -t.quantity ELSE 0 END) "
+                    + "FROM Transaction t WHERE p.id = t.product_id) " + operation + " 0 ";
+	    }
+		
 		if (odDatuma != null && doDatuma != null) {
 			selectSql += "AND p.created_at BETWEEN ? AND ? ";
 		}
@@ -164,6 +206,7 @@ public class DisplayStanjeController implements Initializable {
 		if (stanjeTip != null && !stanjeTip.isEmpty()) {
 			selectSql += "AND p.product_type = ? ";
 		}
+	
 
 		selectSql += "GROUP BY p.id, p.product_collection, p.product_type, p.gold, p.silver, p.price, p.is_deleted, p.created_at, p.updated_at";
 
@@ -187,7 +230,7 @@ public class DisplayStanjeController implements Initializable {
 			}
 
 			ResultSet resultSet = selectStatement.executeQuery();
-
+			
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
 				String productCollection = resultSet.getString("product_collection");
@@ -200,6 +243,10 @@ public class DisplayStanjeController implements Initializable {
 				Timestamp updatedAt = resultSet.getTimestamp("updated_at");
 				int quantity = resultSet.getInt("total_quantity");
 
+				totalGold += (gold*quantity);
+				totalSilver += (silver*quantity);
+				totalPrice += (price*quantity);
+				
 				Product product = new Product(id, productCollection, productType, gold, silver, price, isDeleted,
 						createdAt, updatedAt);
 				product.setQuantity(quantity);
@@ -210,6 +257,9 @@ public class DisplayStanjeController implements Initializable {
 			e.printStackTrace();
 		}
 		prikazivanje_table.setItems(products);
+		totalGoldLabel.setText("Total au:   " + String.valueOf(totalGold) + " g");
+        totalSilverLabel.setText("Total ag:   " + String.valueOf(totalSilver) + " g");
+        totalPriceLabel.setText("Total price:   " + String.valueOf(totalPrice) + " KM");
 	}
 
 	private String formatCijena(Double cijena) {
@@ -226,6 +276,70 @@ public class DisplayStanjeController implements Initializable {
 		Date date = new Date(timestamp.getTime());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(date);
+	}
+	
+	//private float[] sumGoldSilverPriceSQL() {
+		float totalGold = 0;
+		float totalSilver = 0;
+		float totalPrice = 0;
+		
+		//String searchSql = "SELECT SUM(gold * quantity), SUM(silver * quantity), SUM(price * quantity) FROM "
+	
+	
+	private double[] sumGoldSilverPrice() {
+	    double totalGold = 0.0;
+	    double totalSilver = 0.0;
+	    double totalPrice = 0.0;
+	    TableColumn<Product, ?> goldColumn = null;
+	    TableColumn<Product, ?> silverColumn = null;
+	    TableColumn<Product, ?> priceColumn = null;
+	    TableColumn<Product, ?> kolicinaColumn = null;
+	    
+	    for (TableColumn<Product, ?> column : prikazivanje_table.getColumns()) {
+	    	//System.out.println(column.getText());
+	        if (column.getText().equals("Au")) {
+	            goldColumn = column;
+	        } else if (column.getText().equals("Ag")) {
+	            silverColumn = column;
+	        }else if (column.getText().equals("Cijena")) {
+	        	priceColumn = column;
+	        } else if (column.getText().equals("Quantity")) {
+	        	kolicinaColumn = column;
+	        }
+	    }
+	    
+	    if (goldColumn != null) {
+	        for (Product product : prikazivanje_table.getItems()) {
+	            Object goldValue = goldColumn.getCellData(product);
+	            Object kolicinaValue = kolicinaColumn.getCellData(product);
+	                totalGold += (Double) goldValue;
+	        }
+	    }
+	    
+	    if (silverColumn != null) {
+	        for (Product product : prikazivanje_table.getItems()) {
+	            Object silverValue = silverColumn.getCellData(product);
+	                totalSilver += (Double) silverValue;
+	        }
+	    }
+	    
+	    if (priceColumn != null) {
+	        for (Product product : prikazivanje_table.getItems()) {
+	            String priceData = (String) priceColumn.getCellData(product);
+	            if (priceData != null && priceData.length() >= 2) {
+	            	String trimmedPriceData = priceData.substring(0, priceData.length() - 2);
+	            	try {
+	                    Double priceValue = Double.parseDouble(trimmedPriceData);
+	                    totalPrice += priceValue;
+	                } catch (NumberFormatException e) {
+	                    // Handle parsing errors, if necessary
+	                    System.err.println("Error parsing price value: " + trimmedPriceData);
+	                }
+	            } 
+	        }
+	    }
+	    
+	    return new double[]{totalGold, totalSilver, totalPrice};
 	}
 
 	@FXML
@@ -252,6 +366,30 @@ public class DisplayStanjeController implements Initializable {
 	public void setStanjeModel(String stanjeModel) {
 		this.stanjeModel = stanjeModel;
 		loadProductsInStoreAndUpdateTotalItemsCount();
+	}
+	
+	public void setBooleanZero(Boolean noZero) {
+		this.noZero = noZero;
+	}
+	
+	public Boolean getBooleanZero() {
+		return noZero;
+	}
+	
+	public void setBooleanMinus(Boolean minus) {
+		this.minus = minus;
+	}
+	
+	public Boolean getBooleanMinus() {
+		return minus;
+	}
+	
+	public void setBoolean(Boolean noZero) {
+		this.noZero = noZero;
+	}
+	
+	public Boolean getBoolean() {
+		return noZero;
 	}
 
 	public Date getOdDatuma() {
