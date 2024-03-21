@@ -34,15 +34,20 @@ public class DatabaseInitializer {
 					+ "product_collection VARCHAR(255)," + "product_type ENUM('TYPE1', 'TYPE2')," + "gold FLOAT,"
 					+ "silver FLOAT," + "price FLOAT," + "is_deleted BOOLEAN,"
 					+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-					+ "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)");
+					+ "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+					+ "UNIQUE(product_collection, product_type))");
 
 			// Create Transaction table if it doesn't exist
-			//statement.executeUpdate("DROP TABLE IF EXISTS Transaction"); //uncomment this if needed.
-			//Had to reset the table so I could input the 'FIX' ENUM into the status column
-			statement.executeUpdate("CREATE TABLE IF NOT EXISTS Transaction(" + "id INT AUTO_INCREMENT PRIMARY KEY,"
-					+ "product_id INT," + "quantity INTEGER," + "status ENUM('SOLD', 'ADDED', 'REFUNDED', 'FIX ADD', 'FIX SOLD'),"
-					+ "created_at DATETIME DEFAULT CURRENT_TIMESTAMP,"
-					+ "FOREIGN KEY (product_id) REFERENCES Product(id))");
+			// statement.executeUpdate("DROP TABLE IF EXISTS Transaction"); //uncomment this
+			// if needed.
+			// you could have done this in the mysql thingy (shell/workbench) directly u
+			// know
+			// Had to reset the table so I could input the 'FIX' ENUM into the status column
+			statement.executeUpdate(
+					"CREATE TABLE IF NOT EXISTS Transaction(" + "id INT AUTO_INCREMENT PRIMARY KEY," + "product_id INT,"
+							+ "quantity INTEGER," + "status ENUM('SOLD', 'ADDED', 'REFUNDED', 'FIX ADD', 'FIX SOLD'),"
+							+ "created_at DATETIME DEFAULT CURRENT_TIMESTAMP,"
+							+ "FOREIGN KEY (product_id) REFERENCES Product(id))");
 
 			// Create PriceArchive table if it doesn't exist
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS PriceArchive(" + "id INT AUTO_INCREMENT PRIMARY KEY,"
