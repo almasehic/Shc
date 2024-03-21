@@ -66,6 +66,22 @@ public class DodajProizvodController {
 		stage.show();
 	}
 
+	private void switchToMainViewThenShowNotification(ActionEvent event, String notificationType,
+			String notificationMessage) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/view/FXMLHomePage.fxml"));
+		Parent root = loader.load();
+		stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
+
+		if (loader.getController() instanceof MainController) {
+			MainController destinationController = loader.getController();
+			StackPane notificationPane = destinationController.getNotificationPane();
+			NotificationHandler.showNotification(notificationPane, notificationType, notificationMessage);
+		}
+	}
+
 	public void switchToProizvodi(ActionEvent event) throws IOException {
 		switchToView("/resources/view/DisplayProducts.fxml", event);
 	}
@@ -109,10 +125,8 @@ public class DodajProizvodController {
 
 				int rowsAffected = updateStatement.executeUpdate();
 				if (rowsAffected > 0) {
-					NotificationHandler.showNotification(notificationPane, "Success", "Product updated successfully!");
-
 					try {
-						switchToMain(event);
+						switchToMainViewThenShowNotification(event, "Success", "Product updated successfully!");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -183,9 +197,9 @@ public class DodajProizvodController {
 												NotificationHandler.showNotification(notificationPane, "Success",
 														"Novi proizvod je uspješno dodan!");
 
-												// Switch to the main view
 												try {
-													switchToMain(event);
+													switchToMainViewThenShowNotification(event, "Success",
+															"Product updated successfully!");
 												} catch (IOException e) {
 													e.printStackTrace();
 												}
