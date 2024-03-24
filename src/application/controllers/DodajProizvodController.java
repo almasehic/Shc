@@ -113,36 +113,44 @@ public class DodajProizvodController {
 			return;
 		}
 
-		try (Connection connection = DatabaseUtil.getConnection()) {
-			String updateSql = "UPDATE Product SET gold = ?, silver = ?, price = ?, product_collection = ?, product_type = ? WHERE id = ?";
-			try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
-				updateStatement.setDouble(1, Au);
-				updateStatement.setDouble(2, Ag);
-				updateStatement.setDouble(3, Pr);
-				updateStatement.setString(4, model);
-				updateStatement.setString(5, tip.toUpperCase());
-				updateStatement.setInt(6, product_id);
+		PopUpHandler.showPopup(popUpPane, "Da li je ovo novi proizvog koji zelite dodati:",
+				model + "     " + tip + "     " + Au + "     " + Ag + "     " + Pr, (isConfirmed) -> {
+					if (isConfirmed) {
+						try (Connection connection = DatabaseUtil.getConnection()) {
+							String updateSql = "UPDATE Product SET gold = ?, silver = ?, price = ?, product_collection = ?, product_type = ? WHERE id = ?";
+							try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
+								updateStatement.setDouble(1, Au);
+								updateStatement.setDouble(2, Ag);
+								updateStatement.setDouble(3, Pr);
+								updateStatement.setString(4, model);
+								updateStatement.setString(5, tip.toUpperCase());
+								updateStatement.setInt(6, product_id);
 
-				int rowsAffected = updateStatement.executeUpdate();
-				if (rowsAffected > 0) {
-					try {
-						switchToMainViewThenShowNotification(event, "Success", "Product updated successfully!");
-					} catch (IOException e) {
-						e.printStackTrace();
+								int rowsAffected = updateStatement.executeUpdate();
+								if (rowsAffected > 0) {
+									try {
+										switchToMainViewThenShowNotification(event, "Success",
+												"Product updated successfully!");
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								} else {
+									NotificationHandler.showNotification(notificationPane, "Error",
+											"No product found for updating!");
+								}
+							}
+						} catch (SQLException e) {
+							e.printStackTrace();
+							NotificationHandler.showNotification(notificationPane, "Error",
+									"Database connection error: " + e.getMessage());
+						} catch (NumberFormatException e) {
+							e.printStackTrace();
+							NotificationHandler.showNotification(notificationPane, "Error",
+									"Invalid quantity input. Please enter a valid number.");
+						}
 					}
-				} else {
-					NotificationHandler.showNotification(notificationPane, "Error", "No product found for updating!");
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			NotificationHandler.showNotification(notificationPane, "Error",
-					"Database connection error: " + e.getMessage());
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			NotificationHandler.showNotification(notificationPane, "Error",
-					"Invalid quantity input. Please enter a valid number.");
-		}
+				});
+
 	}
 
 	public void addNewProduct(ActionEvent event) {
